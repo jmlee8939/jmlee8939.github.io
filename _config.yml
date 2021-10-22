@@ -104,7 +104,7 @@ analytics:
 author:
   name             : "Jaemini_man"
   avatar           : "/assets/images/profile.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "To be inquisitive data scientist. <br> Love soccer (Liverpool FC) & pizza"
+  bio              : "To be inquisitive data scientist. <br> Love soccer (Liverpool FC) & pizza."
   location         : "Republic of Korea"
   #email            : "jmlee8939@hanmail.net"
   links:
@@ -138,7 +138,7 @@ footer:
       # url:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      # url:
+      url: "https://github.com/jmlee8939"
     - label: "GitLab"
       icon: "fab fa-fw fa-gitlab"
       # url:
