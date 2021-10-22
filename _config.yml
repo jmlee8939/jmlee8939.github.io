@@ -104,7 +104,7 @@ analytics:
 author:
   name             : "Jaemini_man"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "To be inquisitive data scientist.       I love soccer (Liverpool FC) & pizza"
+  bio              : "To be inquisitive data scientist. \n\n I love soccer (Liverpool FC) & pizza"
   location         : "Korea"
   email            : "jmlee8939@hanmail.net"
   links:
