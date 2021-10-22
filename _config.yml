@@ -107,11 +107,10 @@ author:
   bio              : "To be inquisitive data scientist. <br> Love soccer (Liverpool FC) & pizza"
   location         : "Republic of Korea"
   email            : "jmlee8939@hanmail.net"
-  GitHub           : "https://github.com/jmlee8939" 
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: "mailto:jmlee8939@hanmail.net"
+      # url: "mailto:jmlee8939@hanmail.net"
     - label: "Website"
       icon: "fas fa-fw fa-link"
       # url: "https://your-website.com"
