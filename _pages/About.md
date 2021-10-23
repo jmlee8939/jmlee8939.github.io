@@ -1,7 +1,7 @@
 ---
 title: " "
 header:
-  caption: 
+  caption: About me and blog
 permalink: /about/
 ---
 
