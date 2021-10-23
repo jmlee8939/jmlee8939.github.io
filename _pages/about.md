@@ -9,6 +9,10 @@ title: "About"
 
 ## Author
 
+<p align="center">
+  <img src="/assets/iamges/about_img.jpg" />
+</p>
+
 #### Name
 이재민 / Lee Jaemin
 
