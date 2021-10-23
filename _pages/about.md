@@ -10,7 +10,7 @@ title: "About"
 ## Author
 
 <p align="center">
-  <img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/images/about_img.jpg" />
+  <img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/master/images/about_img.jpg" />
 </p>
 
 #### Name
