@@ -4,7 +4,6 @@ title: "About"
 layout: single
 author_profile: true
 ---
-
 # About me
 ### Name
 이재민 / Lee Jaemin
