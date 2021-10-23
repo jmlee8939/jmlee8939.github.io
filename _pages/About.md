@@ -1,4 +1,11 @@
-# Author
+title: " "
+header:
+  caption: 
+permalink: /about/
+---
+
+
+# About me
 ### Name
 이재민 / Lee Jaemin
 
