@@ -11,7 +11,7 @@ title: "About"
 
 
 <p align="center">
-  <img src="https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/about_img.jpg"/>
+  <img src="https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/about_img.jpg" width="200" height="200" />
 </p>
 
 #### Name
