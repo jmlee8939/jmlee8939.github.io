@@ -9,8 +9,7 @@ tags:
   - soccer data
 ---
 ## Intro
-#### *"Action is the foundational key to all success." - Pablo Picasso* <br>  
-
+#### *"Action is the foundational key to all success." - Pablo Picasso* 
 드디어 미루고 미뤘던 첫 포스팅을 시작한다. 
 평범한 공대생이었던 내가 데이터 마이닝과 머신러닝으로 진로를 바꾸어 공부한지도 어연 2년이 되었다.
 아직 부족하고 모르는 것 투성이지만, 용감하게 블로그를 시작하려고 한다.
