@@ -1,10 +1,10 @@
-~~---
+---
 title: "Crwaling Soccer Data"
 excerpt: "Chrome webdriver 로 축구 경기 웹사이트(Whoscored.com)에서 경기 DATA 크롤링 하기"
 header:
-  teaser: "http://farm9.staticflickr.com/8426/7758832526_cc8f681e48_c.jpg"
+  teaser: "http://drive.google.com/uc?export=view&id=1-atf2hBTNCbA7c3MoSaFDiqI0EqWGzzp"
 tags: 
-  - web crwaling
+  - web crawling
   - data collecting
   - soccer data
 ---
@@ -60,8 +60,7 @@ pip  install selenium
    <img src='http://drive.google.com/uc?export=view&id=1nr-WMqLZfxYh-TRcyJ2oleGbnVQEX-Yc' /><br>
    <br>
    2. 버전에 맞는 ChromeDriver를 설치한다. <br>
-   <img src='http://drive.google.com/uc?export=view&id=1VVB8z1Iqk99LDjScfTDD28-1aAR2h-Fn' /><br>
-
+   <img src='http://drive.google.com/uc?export=view&id=1SqI63bmicsFOWkF4VIWEM2koiAlxbcQy' /><br>
    3. ChromeDriver 가 설치된 디렉토리를 확인한다.
 
 ---
@@ -101,10 +100,15 @@ chromedriver 가 잘 연결되었다면, 위 코드를 실행했을 때 Whoscore
 #### 2. 웹 상의 소스코드 구조 확인
 웹페이지의 소스코드는 F12를 누르면 확인할 수 있고,
 *Control + Shift + C* 를 활용하면 마우스 커서에 해당하는 element 의 소스 코드를 쉽게 찾을 수 있다.
+
+<p align="center">
+<img src='http://drive.google.com/uc?export=view&id=1kjLeWgH60qu4X4g7Ie5zFOk9EvwfjTCt' width=500/>
+</p>
+
 이를 통해서 crawling 하고자 하는 element 의 소스 코드 구조를 확인할 수 있다.     
 
 <p align="center">
-<img src='http://drive.google.com/uc?export=view&id=1-48n5jHSTBnuKqFzZXfuwaNm1zGqy32b' width=800/><br>
+<img src='http://drive.google.com/uc?export=view&id=1dmwY_SHZkj0TgV4IeSOdIYJ92rpBfyIh' width=500/>
 </p>
 
 #### 3. CSS selector
@@ -187,7 +191,11 @@ df.head()
 
 ## Wrap up
 방구석 축구전문가로 거듭나기 위한 첫번째 단계이자, 데이터 분석을 더욱 재밌게 즐기기 위한 첫 포스팅을 마무리하고자 한다.
-이 포스팅에서 소개한 crawling 방법 이외에도 다양하고 훨씬 효율적인 crawling 방법들이 있을 것이라 생각된다.
-하지만, 소개하였던 crawling 방법을 조금 응용하는 것으로도 웹상의 데이터를 편하게 수집하는 crawler 를 만드는 데에는 큰 무리가 없으리라 생각된다. 
+crawler 은 많은 데이터의 반복적인 수집을 필요로 할 때 효과적으로 활용할 수 있을 것이다. 
+이 편리한 친구는 앞으로도 나의 데이터 수집 하청업자로서 역할을 톡톡히 해내리라 믿는다.
+
+이 포스팅에서 소개한 crawling 방법 이외에도 다양하고 훨씬 효율적인 crawling 방법들이 많이 있다.
+하지만, 소개하였던 crawling 방법을 조금 응용하는 것만으로도 간단한 crawler 를 만드는 데에는 큰 무리가 없으리라 생각된다. 
 League table 이 외에도 매 경기의 경기 결과 정보, 선수 정보도 crawling 하는 코드들을 [요기](https://github.com/jmlee8939/whoscored_crawling) 을 참고
-정리해 두었으니 필요하면 참고해 두면 좋을 것 같다.  
+정리해 두었으니 필요하면 참고해 두면 좋을 것 같다. 
+
