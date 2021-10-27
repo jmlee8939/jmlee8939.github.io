@@ -7,8 +7,7 @@ tags:
   - web crawling
   - data collecting
   - soccer data
-
-
+---
   
 ## Preface
 #### *"Action is the foundational key to all success." - Pablo Picasso* <br>  
