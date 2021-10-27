@@ -20,7 +20,7 @@ tags:
 
 
 ## Intro
-첫 포스팅의 주제는 바로 *"축구경기 데이터 Crawling"* 이다.
+첫 포스팅의 주제는 바로 **"축구경기 데이터 Crawling"** 이다.
 평소 축구경기에 죽고 사는 나는 자주 방구석 전력분석관이 되곤 한다. 
 능력있는 방구석 전력분석관으로 거듭나기 위해선 데이터 수집이 필수적이다.
 다행히도 다양한 축구 통계 사이트에서 경기 결과 정보를 쉽게 찾을 수 있다.
@@ -30,16 +30,16 @@ tags:
 ## Crawling/Crawler
 
 Crwaling은 웹 페이지를 그대로 가져와서 데이터를 추출하는 행위를 말한다. 
-이때, 이 Crawling 작업을 해주는 소프트웨어가 바로 *'crawler'* 이다. 
-Crawler 는 검색을 통해 얻을 수 있는 정보를 우리 대신에 빠르고 반복적으로 수집해주는 아주 유용한 놈이다.
+이때, 이 Crawling 작업을 해주는 소프트웨어가 바로 *Crawler* 이다. 
+*Crawler* 는 검색을 통해 얻을 수 있는 정보를 우리 대신에 빠르고 반복적으로 수집해주는 아주 유용한 놈이다.
 
 
 ## Software
-이 *유용한 친구(Crawler)* 에 활용되는 소프트웨어는 Python, Selenium, Chrome webdriver 이다.
+이 유용한 친구(*Crawler*) 에 활용되는 소프트웨어는 Python, Selenium, Chrome webdriver 이다.
 > - Python 
 > - Selenium 
 > - Chrome webdriver 
-> 
+
 Selenium은 웹 자동화 테스트(버튼 클릭, 스크롤 조작 등)에 사용되는 프레임워크로 
 자동적으로 원하는 정보가 있는 페이지를 찾아서, 필요한 소스에 접근하게 해준다. 
 Chrome browser 를 자동화 하기 위해서 Chrome webdriver 가 필요하고,
@@ -67,12 +67,12 @@ pip  install selenium
    3. ChromeDriver 가 설치된 디렉토리를 확인한다.
 
 
-## whoscored.com
+## Whoscored.com
 후스코어드닷컴은 여러 축구 통계사이트(opta, transfermakt, 등..) 중 하나로 다양한 경기정보를 제공한다. 
 유럽 각 국의 1부리그 뿐만 아니라 하부리그 경기 정보까지 제공하며,
 경기에서 발생하는 세부 지표들을 상세하게 정리해 놓아서 많은 축구팬들이 참고하는 사이트이다.
 나와 같은 방구석 분석가에게 꼭 필요한 사이트라 할 수 있다.
-본 포스팅에서는 2021시즌 Premier League table 을 크롤링하는 방법을 간단히 소개하고자 한다.
+본 포스팅에서는 2021시즌 Premier League table 을 Crawling 하는 방법을 간단히 소개하고자 한다.
 
 > 자세한 크롤링 코드는 GitHub [whoscored_crawling](https://github.com/jmlee8939/whoscored_crawling) 을 참고
 
@@ -84,30 +84,27 @@ ex) [2021 League Table](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Se
 
 ## Crawling process
 #### 1. webdriver 연결 확인
-python 환경에서 로컬에 저장된 chromedriver 를 연결해서 브라우저 제어 가능한지 확인하는 코드는 다음과 같다.
+python 환경에서 로컬에 저장된 Chromedriver 를 연결해서 브라우저 제어 가능한지 확인하는 코드는 다음과 같다.
 ```python
 # 디렉토리에 저장된 chromedriver 에 연결
 driver = webdriver.Chrome('./chromedriver')
-
 # 웹 브라우저 열기    
 driver.get('https://1xbet.whoscored.com/')
-    
 # 일시 정지 (3초)
 time.sleep(3)
-    
 # 웹 브라우저 닫기 
 driver.close()
 ```
 chromedriver 가 잘 연결되었다면, 위 코드를 실행했을 때 Whoscored.com 사이트가 열렸다가 3초 후 브라우저가 종료될 것이다. 
 #### 2. 웹 상의 소스코드 구조 확인
 웹페이지의 소스코드는 F12를 누르면 확인할 수 있고,
-*Control + Shift + C* 를 활용하면 마우스 커서에 해당하는 element 의 소스 코드를 쉽게 찾을 수 있다.
+*Control + Shift + C* 를 활용하면 마우스 커서에 해당하는 Element 의 소스 코드를 쉽게 찾을 수 있다.
 
 <p align="center">
 <img src='http://drive.google.com/uc?export=view&id=1OOUVinJkEI8cmEu9yasfTkaqs5iq-BO1' width=700/>
 </p>
 
-이를 통해서 crawling 하고자 하는 element 의 소스 코드 구조를 확인할 수 있다.     
+이를 통해서 Crawling 하고자 하는 Element 의 소스 코드 구조를 확인할 수 있다.     
 
 <p align="center">
 <img src='http://drive.google.com/uc?export=view&id=1dmwY_SHZkj0TgV4IeSOdIYJ92rpBfyIh' width=700/>
@@ -115,10 +112,10 @@ chromedriver 가 잘 연결되었다면, 위 코드를 실행했을 때 Whoscore
 
 #### 3. CSS selector
 CSS selector 는 웹상에 존재하는 모든 요소들을 선택하게 해 주는 네비게이션 역할을 한다.
-이 CSS selector 를 통해서 원하는 소스 코드에 접근하고 이를 가져오는 방식으로 crawling 이 이루어진다.
+이 CSS selector 를 통해서 원하는 소스 코드에 접근하고 이를 가져오는 방식으로 Crawling 이 이루어진다.
 
 ## Crawling code
-위에서 설명했던, Selenium, chromedriver 를 활용하여 crawler 를 구성한 코드는 다음과 같다.
+위에서 설명했던, Selenium, chromedriver 를 활용하여 *Crawler* 를 구성한 코드는 다음과 같다.
 
 ```python
 import time
@@ -128,14 +125,10 @@ from selenium import webdriver
 def league_table_crawler(URL, api_delay_term=3):
     """
     cwaling league table(seasonal statistics) 
-    
     Args : 
-        URL : league table URL
-    
+        URL : league table URL 
     Output :
         leauge table(dataframe)
-    
- 
     """
     url = str(URL)
     driver = webdriver.Chrome('./chromedriver')
@@ -145,9 +138,9 @@ def league_table_crawler(URL, api_delay_term=3):
     
     league_table_df = pd.DataFrame(columns=[
         "team_number", "team_name", "P", "W", "D", "L", "GF", "GA", "GD", "Pts"])
+    
     elements = driver.find_elements_by_class_name("standings")[0]
     elements = elements.find_elements_by_css_selector("tr")
-
     
     for element in elements:
         league_table_dict = { 
@@ -163,14 +156,13 @@ def league_table_crawler(URL, api_delay_term=3):
             "Pts": element.find_elements_by_css_selector("td")[8].text,
         }
         league_table_df.loc[len(league_table_df)] = league_table_dict
-    
     # close webdriver
     driver.close()
     
     return league_table_df
 ```
 Premier League 2021 시즌의 League table 의 [URL](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League)
-과 crawler 를 연결시키고 crawling 을 진행한다.<br>
+과 *Crawler* 를 연결시키고 Crawling 을 진행한다.<br>
 ```python
 URL = 'https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League'
 df = league_table_crawler(URL, api_delay_term=3)
@@ -192,10 +184,10 @@ df.head()
 
 ## Wrap up
 방구석 축구전문가로 거듭나기 위한 첫번째 단계이자, 데이터 분석을 더욱 재밌게 즐기기 위한 첫 포스팅을 마무리하고자 한다.
-crawler 는 많은 데이터의 반복적인 수집을 필요로 할 때 효과적으로 활용할 수 있을것 같다. 
+*Crawler* 는 많은 데이터의 반복적인 수집을 필요로 할 때 효과적으로 활용할 수 있을것 같다. 
 이 편리한 친구는 앞으로도 나의 데이터 수집 하청업자로서 역할을 톡톡히 해내리라 믿는다.
 
-이 포스팅에서 소개한 crawling 방법 이외에도 다양하고 훨씬 효율적인 crawling 방법들이 많이 있지만,
-소개하였던 crawling 방법을 조금 응용하는 것만으로도 간단한 crawler 를 만드는 데에는 큰 무리가 없지 않을까. 
-League table 이 외에도 매 경기의 경기 결과 정보, 선수 정보도 crawling 하는 코드들을 [요기](https://github.com/jmlee8939/whoscored_crawling) 에 정리해 두었으니 필요하면 참고해 두면 좋을 것 같다. 
+이 포스팅에서 소개한 Crawling 방법 이외에도 다양하고 훨씬 효율적인 Crawling 방법들이 많이 있지만,
+소개하였던 Crawling 방법을 조금 응용하는 것만으로도 간단한 *Crawler* 를 만드는 데에는 큰 무리가 없지 않을까. 
+League table 이 외에도 매 경기의 경기 결과 정보, 선수 정보도 Crawling 하는 코드들을 [요기](https://github.com/jmlee8939/whoscored_crawling) 에 정리해 두었으니 필요하면 참고해 두면 좋을 것 같다. 
 
