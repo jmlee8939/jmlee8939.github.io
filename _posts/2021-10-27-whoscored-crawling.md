@@ -1,5 +1,5 @@
 ---
-title: "Crwaling Soccer Data"
+title: "축구 데이터 크롤링하기"
 excerpt: "Chrome webdriver 로 축구 경기 웹사이트(Whoscored.com)에서 경기 DATA 크롤링 하기"
 header:
   teaser: "http://drive.google.com/uc?export=view&id=1-atf2hBTNCbA7c3MoSaFDiqI0EqWGzzp"
@@ -49,15 +49,17 @@ python 환경에서 쉽게 구현 가능하다.
 ## Setting up
 #### 1. Selenium 설치 <br>
   - Python 환경에서 pip 로 쉽게 설치 가능하다.
+
 ```python
 pip  install selenium
 ```
+
 #### 2. Chrome webdriver 설치
 
   - [ChromeDriver](https://chromedriver.chromium.org/downloads) 사이트에서 쉽게 설치 가능하다.
   - 사용하려는 Chrome browser 와 버전이 동일해야 한다.** <br>
-
-**chrome version 확인 : 크롬 브라우저 검색창에 *chrome://version* 입력해서 확인가능<br>
+    - chrome version 확인 : 크롬 브라우저 검색창에 *chrome://version* 입력해서 확인가능<br>
+    
    1. 현재 Chrome browser 버전을 확인하고,<br>
    <img src='http://drive.google.com/uc?export=view&id=1nr-WMqLZfxYh-TRcyJ2oleGbnVQEX-Yc' /><br>
    <br>
@@ -75,11 +77,13 @@ pip  install selenium
 
 > 자세한 크롤링 코드는 GitHub [whoscored_crawling](https://github.com/jmlee8939/whoscored_crawling) 을 참고
 
-ex) [2021 League Table](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League)
+내가 처음으로 Crawling 하고자 한 정보는 바로 이 [2021 League Table](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League)
+ 이다.
 <p align="center">
 <img src='http://drive.google.com/uc?export=view&id=11DFElgxvXdzAEA4iVvnh_8DNonhP3Q7f' width=700/><br>
 </p>
-
+위 League table은 2021 시즌의 순위와 각 팀의 경기 결과들을 한눈에 볼 수 있는 표로 참고할 만한 여러 정보를 담고있다.
+머신러닝 및 데이터 분석에 활용할 수 있도록 python 이나 R 환경으로 세부 정보들을 옮겨보고자 한다.
 
 ## Crawling process
 #### 1. webdriver 연결 확인
@@ -113,8 +117,36 @@ chromedriver 가 잘 연결되었다면, 위 코드를 실행했을 때 Whoscore
 CSS selector 는 웹상에 존재하는 모든 요소들을 선택하게 해 주는 네비게이션 역할을 한다.
 이 CSS selector 를 통해서 원하는 소스 코드에 접근하고 이를 가져오는 방식으로 Crawling 이 이루어진다.
 
+## Selenium elements finding function
+
+Crawling 하고자하는 페이지의 html 의 구조를 확인하였으면,
+Selenium 를 활용하여 해당 element 에 접근하여야 한다.
+Selenium 에서는 아래와 같은 함수들를 통해 element 에 접근한다.
+
+| 함수 이름                    | 기능                       |
+|------------------------------|----------------------------|
+| find_element_by_id           | id 속성을 사용하여 접근    |
+| find_element_by_name         | name 속성을 사용하여 접근  |
+| find_element_by_tag_name     | 태그를 사용하여 접근       |
+| find_element_by_class_name   | 클래스를 사용하여 접근     |
+| find_element_by_css_selector | CSS 선택자를 사용하여 접근 |
+
+다수의 elements 에 접근하는 함수는 다음과 같다. (리스트 반환)
+
+| 함수 이름                     	| 기능                       	|
+|-------------------------------	|----------------------------	|
+| find_elements_by_id           	| id 속성을 사용하여 접근    	|
+| ind_elements_by_name          	| name 속성을 사용하여 접근  	|
+| find_elemenst_by_tag_name     	| 태그를 사용하여 접근       	|
+| find_elements_by_class_name   	| 클래스를 사용하여 접근     	|
+| find_elements_by_css_selector 	| CSS 선택자를 사용하여 접근 	|
+
 ## Crawling code
-위에서 설명했던, Selenium, chromedriver 를 활용하여 *Crawler* 를 구성한 코드는 다음과 같다.
+내가 Crawling 하고자 하는 table 의 class 는 "standings" 이고 
+다수의 하위 요소 "td" 에 팀이름, 승, 무, 패, 승점 등의 정보가 담겨 있다.
+위 함수들을 를 활용하여 class 이름으로 table 에 접근하고, 다수의 "td" 에 해당하는 정보들을 차례로 불러오고자 한다.
+
+*Crawler* 를 구성한 코드는 다음과 같다.
 
 ```python
 import time
@@ -160,7 +192,7 @@ def league_table_crawler(URL, api_delay_term=3):
     
     return league_table_df
 ```
-Premier League 2021 시즌의 League table 의 [URL](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League)
+그 다음 Premier League 2021 시즌의 League table 의 [URL](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League)
 과 *Crawler* 를 연결시키고 Crawling 을 진행한다.<br>
 ```python
 URL = 'https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League'
@@ -178,8 +210,9 @@ df.head()
 | 15          | Chelsea                 | 38 | 19 | 10 | 9  | 58 | 36 | +22 | 67  |
 | 14          | Leicester               | 38 | 20 | 6  | 12 | 68 | 50 | +18 | 66  |
 
-안타깝게도 .head() 함수는 디폴트로 상위 5개 항목만을 보여주므로, 토트넘 아스날은 여기에 끼지 못했다.
-(앞으로도 한동안 여기 못 낄 듯 하다.)
+20개의 모든 팀의 정보가 Crawling 됨을 확인하였다. 하지만
+.head() 함수는 디폴트로 상위 5개 항목만을 보여주므로, 안타깝께도 토트넘 아스날은 여기에 끼지 못했다.
+(앞으로도 한동안 여기 못 낄 듯 하다. 어서 손흥민 선수가 탈 토트넘 하길...) 
 
 ## Wrap up
 방구석 축구전문가로 거듭나기 위한 첫번째 단계이자, 데이터 분석을 더욱 재밌게 즐기기 위한 첫 포스팅을 마무리하고자 한다.
