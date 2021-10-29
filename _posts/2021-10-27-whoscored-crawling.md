@@ -1,5 +1,5 @@
 ---
-title: "축구 데이터 크롤링하기"
+title: "[DP20] 축구 데이터 크롤링하기"
 excerpt: "Chrome webdriver 로 축구 경기 웹사이트(Whoscored.com)에서 경기 DATA 크롤링 하기"
 header:
   teaser: "http://drive.google.com/uc?export=view&id=1-atf2hBTNCbA7c3MoSaFDiqI0EqWGzzp"
@@ -220,4 +220,3 @@ df.head()
 이 포스팅에서 소개한 Crawling 방법 이외에도 다양하고 훨씬 효율적인 Crawling 방법들이 많이 있지만,
 소개하였던 Crawling 방법을 조금 응용하는 것만으로도 간단한 *Crawler* 를 만드는 데에는 큰 무리가 없지 않을까. 
 League table 이 외에도 매 경기의 경기 결과 정보, 선수 정보도 Crawling 하는 코드들을 [요기](https://github.com/jmlee8939/whoscored_crawling) 에 정리해 두었으니 필요하면 참고해 두면 좋을 것 같다. 
-
