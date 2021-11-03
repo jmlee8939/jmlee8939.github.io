@@ -42,9 +42,30 @@ tags:
 하지만, 평점은 공격포인트로 표현되지 않은 플레이도 분명 반영된 값으로 
 축구 전문가들이 제시하는 **고오급** 정보로서 활용하지 않을 수 없었다.*
 
- 
+# 공격포인트 & 평점 plot
+> - 프리미어리그 선수 데이터 : whoscored.com 에서 crawling
+> - visualization method : python matplotlib, seaborn package 활용
+> - [github/sonny_stats_visualziation](https://github.com/jmlee8939/Sonny_stats_visualization) 참고
 
+리버풀이 30년만에 리그 우승을 하였던 19-20 시즌의 공격포인트 & 평점 plot은 다음과 같다.
+<p align="center">
+<img src='http://drive.google.com/uc?export=view&id=1-oNFUMO1V8MSUxx8UKUO74DQyJG62f7o' width=800/><br>
+<p/>
 
+해당 시즌에 활약했던 선수들을 한눈에 볼 수 있다. 
+눈에 띄는 건 역시 **Kevin De Bruyne** 선수이다. 
+공격포인트와 평점에서 독보적인 시즌을 보냈고, 실제 올해의 선수상 수상자 이기도 하다.
+또 눈에 띄는 선수는 **Trent Alexander-Arnold** 로 왠만한 공격수 보다 높은 공격포인트를 기록하고 있다.
+**손흥민** 선수도 이 시즌 리그 탑급 퍼포먼스를 보낸 것으로 나타난다.
 
+# 손흥민의 20-21 season
+저번 시즌(2020-2021 season) 손흥민은 케인과 함께 엄청난 시즌을 보냈다.
+아쉽게도 팀은 유로파 컨퍼런스 진출에 그쳤지만, 두 선수는 커리어 하이 시즌을 보냈다.
+손흥민은 17골 10도움, 케인은 23골 14도움(득점왕 + 도움왕)으로 나란히 리그 베스트 11에 들었다.
 
+<p align="center">
+<img src='http://drive.google.com/uc?export=view&id=1-wMhFfcqICv0_rCAg2oAhjrLBmrs9hzE' width="500"/>
+<p/>
 
+그림에도 나타나듯 손흥민과 케인은 다른 프리미어리그 공격수들에 비해 독보적인 시즌을 보낸 것을 확인할 수 있다.<br>
+(손흥민 > 스털링 = 마네 ㅇㅈ?)
