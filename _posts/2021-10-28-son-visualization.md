@@ -61,8 +61,7 @@ tags:
 저번 시즌(2020-2021 season) **손흥민**은 **케인**과 함께 엄청난 시즌을 보냈다.
 아쉽게도 팀은 유로파 컨퍼런스 진출에 그쳤지만, 두 선수는 커리어 하이 시즌을 보냈다.
 손흥민은 17골 10도움, 케인은 23골 14도움(득점왕 + 도움왕)으로 나란히 리그 베스트 11에 들었다.
-<p align="center">
-<img src='http://drive.google.com/uc?export=view&id=1-wMhFfcqICv0_rCAg2oAhjrLBmrs9hzE' width="400"/>
-<p/>
+<img src='http://drive.google.com/uc?export=view&id=1-wMhFfcqICv0_rCAg2oAhjrLBmrs9hzE' />
+
 그림에도 나타나듯 손흥민과 케인은 다른 프리미어리그 공격수들에 비해 독보적인 시즌을 보낸 것을 확인할 수 있다.<br>
 (손흥민 > 스털링 = 마네 ㅇㅈ?)
