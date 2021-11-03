@@ -49,11 +49,10 @@ tags:
 > - [github/sonny_stats_visualziation](https://github.com/jmlee8939/Sonny_stats_visualization) 참고
 
 리버풀이 30년만에 리그 우승을 하였던 19-20 시즌의 공격포인트 & 평점 plot은 다음과 같다.
-<p align="center">
-<img src='http://drive.google.com/uc?export=view&id=1-oNFUMO1V8MSUxx8UKUO74DQyJG62f7o' width=1000/>
-<p/>
 
-해당 시즌에 활약했던 선수들을 한눈에 볼 수 있다. <br>
+<img src='http://drive.google.com/uc?export=view&id=1-oNFUMO1V8MSUxx8UKUO74DQyJG62f7o' />
+
+해당 시즌에 활약했던 선수들을 한눈에 볼 수 있다.<br>
 눈에 띄는 건 역시 **Kevin De Bruyne** 선수이다. 
 공격포인트와 평점에서 독보적인 시즌을 보냈고, 실제 올해의 선수상 수상자 이기도 하다.<br>
 또 눈에 띄는 선수는 **Trent Alexander-Arnold** 로 왠만한 공격수 보다 높은 공격포인트를 기록하고 있다. <br>
@@ -66,8 +65,7 @@ tags:
 손흥민은 17골 10도움, 케인은 23골 14도움(득점왕 + 도움왕)으로 나란히 리그 베스트 11에 들었다.
 
 <p align="center">
-<img src='http://drive.google.com/uc?export=view&id=1-wMhFfcqICv0_rCAg2oAhjrLBmrs9hzE' width="500"/>
+<img src='http://drive.google.com/uc?export=view&id=1-wMhFfcqICv0_rCAg2oAhjrLBmrs9hzE' width="400"/>
 <p/>
-
 그림에도 나타나듯 손흥민과 케인은 다른 프리미어리그 공격수들에 비해 독보적인 시즌을 보낸 것을 확인할 수 있다.<br>
 (손흥민 > 스털링 = 마네 ㅇㅈ?)
