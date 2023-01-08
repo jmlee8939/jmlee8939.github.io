@@ -6,19 +6,33 @@ title: "About"
 
 # Blog overview
 
-머신러닝 및 데이터 마이닝 공부 내용 정리보다는, <br>
-데이터를 통해서 이야기를 나누는 심심풀이 블로그입니다. <br>
+데이터 분석에 필요한 지식 및 툴들을 공부하고 <br>
+어떻게 재밌게 가지고 놀까 궁리하는 블로그입니다. <br>
 
 # Author
 
-<img src='http://drive.google.com/uc?export=view&id=15X7Jl2c7-jus6rjQDhOR74muK84HwlfF' width="250" height="250"><br>
+<img src='https://drive.google.com/file/d/1srtmVUuXPe4WFoPB9Q_ZRrx6PV9WF0po/view?usp=share_link' width="250" height="250"><br>
 ### Name
 이재민 / Lee Jaemin
 
-### Current state
-성균관대학교에서 데이터 마이닝과 머신러닝 공부중입니다. <br>
-Studying data mining and machine learning in SKKU.
+### Study
+성균관대학교 기계공학 학사 <br>
+성균관대학교 산업공학 석사 <br>
+
+### Current State
+삼성전자 혁신센터 MES팀 <br>
+SAMSUNG ELECTRONICS INOVATION CENTER <br> 
+MES TEAM, PKG IT GRUOP.
+
+### Work Experience
+Dec. 2021 ~ Jan. 2022	Deloitte Consulting (AI&D) Intern, 	Seoul, Korea <br>  
+- Tasks: Research, Data preprocessing, Crawling open-source data
 
 ### Hobby
-주말 예능 (Premier League) 애청자. <br>
-Hip hop 음악 감상.(하지만 쇼미는 별로) 
+주말 예능 (Premier League) 관람. <br>
+각종 미술관 관람. <br>
+
+### Journal Publications 
+- Jaemin Lee, Minseok Han, Jong-Seok Lee, (2022) “Convergence Analysis of Connection Center Evolution and  Faster Clustering”. Pattern Recognition, 127, 108639. IF 7.74. <br>
+
+- Jaemin Lee,  Juhuhn Kim, hyunho Kim, Jong-Seok Lee, (2022) “A Bayesian approach to predict football matches with changed home advantage in spectator-free matches after the COVID-19 break” Entropy, 24.3 (2022): 366. IF 2.49.
