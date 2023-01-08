@@ -11,7 +11,7 @@ title: "About"
 
 # Author
 
-<img src='https://drive.google.com/file/d/1srtmVUuXPe4WFoPB9Q_ZRrx6PV9WF0po/view?usp=share_link' width="250" height="250"><br>
+<img src='http://drive.google.com/uc?export=view&id=1srtmVUuXPe4WFoPB9Q_ZRrx6PV9WF0po_link' width="250" height="250"><br>
 ### Name
 이재민 / Lee Jaemin
 
