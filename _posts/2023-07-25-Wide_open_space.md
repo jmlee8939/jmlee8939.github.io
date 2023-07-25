@@ -63,11 +63,16 @@ $$f_i(p, t) = \mathbf{pdf} \space of \space \mathbf{X}$$
 > L) 단순 bivariate normal distribution 기반의  $f_i(p,t)$, <br>
 R) 플레이어의 속도와 방향이 고려된 Wide open space 의 $f_i(p,t)$   
 
+###  1) Simple $f$ modeling
 왼쪽 $f$ 는 플레이어의 속도를 고려하지 않고 거리만을 가지고 설계한 것이다.
 $$  \mu_t = p_i(t),  \Sigma_t = k * \begin{vmatrix} 1 & 0 \\ 0 & 1\end{vmatrix}$$
 
 위 모델은 선수가 뛰어가고 있는 방향에 대한 고려가 없다. 선수의 움직임과 반대방향으로 공이 전달되었을 때, 대부분의 선수들은 역동작에 걸리고 안정적인 볼 컨트롤이 어려워진다. 따라서 조금만 생각해 보아도, 왼쪽의 모델보다는 오른쪽 형태의 gaussian distributon 이 더 적합해보인다. 
 
+### 2) Wide open space $f$ modeling
 오른쪽 그림은 저자가 제안한 $f$ 이다. 
-$$\mu_t =  p_i(t) + \vec{t} $$
+$$\mu_t =  p_i(t) + \vec{s}_i(t)*0.5 $$
+$\vec{s}_i(t)$ 는 플레이어 $i$의 속도이고, distribution 의 중심을 속도 방향으로 평행이동시켜 주는 역할을 한다.
+
+
 
