@@ -74,5 +74,4 @@ $$  \mu_t = p_i(t),  \Sigma_t = k * \begin{vmatrix} 1 & 0 \\ 0 & 1\end{vmatrix}$
 $$\mu_t =  p_i(t) + \vec{s}_i(t)*0.5$$ 
 플레이어 $$i$$의 속도 $$\vec{s}_i(t)$$ 는 distribution 의 중심을 속도 방향으로 평행이동시켜 주는 역할을 한다.
 
-
-
+업데이트가 왜 안돼!
