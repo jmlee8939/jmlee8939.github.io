@@ -1,22 +1,23 @@
-{% if page.mathjax %} # post 의 front matter 에 mathjax 항목의 값에 따라 MathJax 를 불러올 지를 결정하는 부분
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$','$'], ["\\(","\\)"] ], # 어떤 기호로 수식을 적을지 정하는 부분
-      processEscapes: true
-    }
-  });
-</script>
-<script
-  type="text/javascript"
-  charset="utf-8"
-  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
->
-</script>
-<script
-  type="text/javascript"
-  charset="utf-8"
-  src="https://vincenttam.github.io/javascripts/MathJaxLocal.js"
->
-</script>
-{% endif %}
+<script type="text/javascript">
+    window.MathJax = {
+   tex: {
+     packages: ['base', 'ams']
+   },
+   loader: {
+     load: ['ui/menu', '[tex]/ams']
+   },
+   startup: {
+     ready() {
+       MathJax.startup.defaultReady();
+       const Macro = MathJax._.input.tex.Symbol.Macro;
+       const MapHandler = MathJax._.input.tex.MapHandler.MapHandler;
+       const Array = MathJax._.input.tex.ams.AmsMethods.default.Array;
+       const env = new Macro('psmallmatrix', Array, [null, '(', ')', 'c', '.333em', '.2em', 'S', 1]);
+       MapHandler.getMap('AMSmath-environment').add('psmallmatrix', env);
+     }
+   }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
