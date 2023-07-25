@@ -42,37 +42,38 @@ Voronoi Diagram 은 평면을 특정 점까지의 거리가 가장 가까운 점
 본 논문에서 구현한 pitch control 모형은 2차원의 운동장 공간 위에 하나의 선수가 만들어내는 공간의 점유를 하나의 bivariate gaussian distribution 으로 표현하는 것을 기본으로 한다. 여기서 선수의 움직임을 반영하여, distribution 의 중심의 위치와 covariance matrix 의 크기와 방향을 조정한다. 
 
 ## Influence function 
-$t$시점에서 플레이어 $i$의 pitch 위 $p$지점의 영향력을 나타내는 함수를  Influence function을 $I_i(p,t)$ 라고 정의한다.
+특정 시간 $$t$$ 에서 플레이어 $$i$$의 pitch 위 $$p$$지점의 영향력을 나타내는 함수를  Influence function을 $$I_i(p,t)$$ 라고 정의한다.
 
-이 $I_i(p,t)$ 값은 아래와 같이 정의된다.
+이 $$I_i(p,t)$$ 값은 아래와 같이 정의된다.
 
 $$ I_i(p,t) = {f_i(p,t)\over f_i(p_i(t), t)}$$
 
-$p_i(t)$는 해당 시점의 플레이어 $i$의 위치이고,
-<br>
-$f_i(p, t)$ 는 bivariate gaussian distribution의 PDF로 표현된 함수이다.  
-
+해당시점의 위치 $$ p_i(t)$$ 는 해당 시점의 플레이어 $$i$$ 의 위치이고, $$f_i(p, t)$$ 는 bivariate gaussian distribution의 PDF로 표현된 함수이다.  
 
 $$  \mathbf{X_t} \sim \mathcal{N}(\mu_t, \Sigma_t) 
 $$
+
 $$f_i(p, t) = \mathbf{pdf} \space of \space \mathbf{X}$$
 
 
 
 ![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/360af4a4-3f7d-4c2c-9d1b-b8e4309aeba6)
-> L) 단순 bivariate normal distribution 기반의  $f_i(p,t)$, <br>
-R) 플레이어의 속도와 방향이 고려된 Wide open space 의 $f_i(p,t)$   
+> L) 단순 bivariate normal distribution 기반의  $$f_i(p,t)$$, <br>
+R) 플레이어의 속도와 방향이 고려된 Wide open space 의 $$f_i(p,t)$$   
 
 ###  1) Simple $f$ modeling
 왼쪽 $f$ 는 플레이어의 속도를 고려하지 않고 거리만을 가지고 설계한 것이다.
+
 $$  \mu_t = p_i(t),  \Sigma_t = k * \begin{vmatrix} 1 & 0 \\ 0 & 1\end{vmatrix}$$
 
 위 모델은 선수가 뛰어가고 있는 방향에 대한 고려가 없다. 선수의 움직임과 반대방향으로 공이 전달되었을 때, 대부분의 선수들은 역동작에 걸리고 안정적인 볼 컨트롤이 어려워진다. 따라서 조금만 생각해 보아도, 왼쪽의 모델보다는 오른쪽 형태의 gaussian distributon 이 더 적합해보인다. 
 
-### 2) Wide open space $f$ modeling
-오른쪽 그림은 저자가 제안한 $f$ 이다. 
+### 2) Wide open space $$f$$ modeling
+오른쪽 그림은 저자가 제안한 $$f$$ 이다. 
+
 $$\mu_t =  p_i(t) + \vec{s}_i(t)*0.5 $$
-$\vec{s}_i(t)$ 는 플레이어 $i$의 속도이고, distribution 의 중심을 속도 방향으로 평행이동시켜 주는 역할을 한다.
+
+$$\vec{s}_i(t)$$ 는 플레이어 $$i$$의 속도이고, distribution 의 중심을 속도 방향으로 평행이동시켜 주는 역할을 한다.
 
 
 
