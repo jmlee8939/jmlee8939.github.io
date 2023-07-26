@@ -96,22 +96,23 @@ $$\Sigma_i(t) = R(\theta,t)S_i(t)S_i(t)R(\theta_i(t), t)^{-1}$$
 여기서, $$Srat_i(s)$$ 는 일반적인 선수들의 최고 속도를 13m/s 로 고정하고 현재 속도 $$s$$ 와 최고속력의 비율을 나타낸다. 이 값이 커지면 커질 수록 속도 방향으로 길고 가는 형태의 gaussian 분포가 나타나게 된다. $$R_i(t)$$ 는 선수-공과의 거리와 영향력 범위를 나타내는 값인데 본 연구에서는 도메인 지식을 활용해서 [4,10] 의 값을 가지는 함수로 지정하였다. 공과의 거리가 가까울수록 선수가 점유하는 공간은 좁아진다는 개념을 기초로 하고 있다. 공이 가까이 있는 경우에는 볼을 컨트롤 한다거나, 볼을 가진 선수들을 마크하는 상황이 많기 때문에 오히려 점유하는 공간이 제한된다. 거리-영향력 범위 함수는 아래 그래프와 같은 값을 가진다.
 
 
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/6fe3c80a-8140-4e66-9669-2f818d8310a7)
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/6fe3c80a-8140-4e66-9669-2f818d8310a7){: width="50%" height="50%"}
 
 
 ## 최종 Pitch Control 모형
 
-드디어 선수, 시점, 공의 위치에 따른 Inflence function $$I_i(p,t)$$ 에 대한 설명을 마무리했고, 최종적으로 모든 경기장 위의 점들에 대한 pitch control $$PC(p,t)$$
+드디어 선수, 시점, 공의 위치에 따른 Inflence function $$I_i(p,t)$$ 에 대한 설명을 마무리했다. 이를 활용해서 모든 경기장 위의 점, 시점에 대한 pitch control $$PC(p,t)$$
 값은 다음과 같이 구성한다. 
 
 $$PC(p,t) = \sigma(\Sigma_i I(p,t)-\Sigma_j I(p,t))$$
 
-여기서 $$\sigma$$ 는 logistic function 으로, 홈팀의 Influence 합과 어웨이 팀의 Influence 합을 뺀 값을  0-1사이의 값으로 변환시켜주는 역할을 한다. 이 PC의 값을 활용하여서 0.5 이상/미만으로 공간을 구분한다면 특정 공간이 어떤 팀에 의해서 점유되고 있는지를 표현하는 classifier 로 이해할 수도 있을 것이다. 
+여기서 $$\sigma$$ 는 logistic function 으로 logistic regression, neural network 의 activation function 에서 자주 활용되는 함수이다. 여기서는  홈팀의 Influence 합과 어웨이 팀의 Influence 합을 뺀 값을  0-1사이의 값으로 변환시켜주는 역할을 한다. 이 PC의 값을 활용하여서 0.5 이상/미만으로 공간을 구분한다면 특정 공간이 어떤 팀에 의해서 점유되고 있는지를 표현하는 classifier 로 이해할 수도 있을 것이다. 최종적으로 구성된 특정 시점의 PC를 시각화하면 다음과 같다.
+
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/31e78d4f-32d2-40be-bfad-57a77fc4db37)
+
+이 모형을 통해서 매 시점마다의 선수들이 점유하는 공간을 표현할 수 있고, 이 논문에서는 이를 활용해서 선수들의 공간 창출 움직임을 수치화 하는 방법까지 제시한다. 그 내용은 다음 글에서 계속해서 설명하려고 한다. (쓰다보니까 글이 너무 길어짐.)
 
 ## 모델 구현
 
 위 모델들을 python 을 통해서 다음과 같이 구현해보았다. 
 > Influence radius
-
-
-
