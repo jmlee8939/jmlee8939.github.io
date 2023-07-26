@@ -136,6 +136,7 @@ dataset = metrica.load_open_data(
 
 dataset.to_df().head()
 ```
+
 | period_id | timestamp | frame_id | ball_state | ball_owning_team_id | ball_x | ...|
 |----------:|----------:|---------:|-----------:|--------------------:|-------:|----:|
 |         0 |         1 |     0.00 |          1 |                None |   None | 
@@ -153,6 +154,7 @@ dataset.to_df().head()
 #... 전처리 끝난 Dataframe df
 df.head()
 ```
+
 | Period | Frame | Time [s] | H11_x |   H11_y |     H1_x |     H1_y |   ... |
 |-------:|------:|---------:|------:|--------:|---------:|---------:|-----:|
 |      2 |     1 |        1 |  0.04 | 0.08528 | 32.80184 | 33.95392 | 
