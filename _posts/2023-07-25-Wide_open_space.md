@@ -1,5 +1,5 @@
 ---
-title: "[DP20] 축구경기에서 공간창출을 지표화 - 1"
+title: "[DP20] 축구경기에서 공간창출을 지표화 한다면? - 1"
 excerpt: "Voronoi Diagram 부터 Pitch control 모형 + Wide Open Spaces:A statistical technique for measuring space creation in professional soccer 논문 리뷰 및 구현하기"
 header:
 tags:
@@ -39,7 +39,7 @@ Voronoi Diagram 은 평면을 특정 점까지의 거리가 가장 가까운 점
 > Wide open space : pitch control model
 
 # Wide Open space / Pitch control
-본 논문에서 구현한 pitch control 모형은 2차원의 운동장 공간 위에 하나의 선수가 만들어내는 공간의 점유를 하나의 bivariate gaussian distribution 으로 표현하는 것을 기본으로 한다. 여기서 선수의 움직임을 반영하여, distribution 의 중심의 위치와 covariance matrix 의 크기와 방향을 조정한다. 
+본 논문에서 구현한 pitch control 모형은 2차원의 운동장 공간 위에 하나의 선수가 만들어내는 공간의 점유를 하나의 bivariate gaussian distribution 으로 표현하는 것을 기본으로 한다. 그 과정에 선수의 움직임, 공의 위치 등을 반영하여 distribution 의 중심의 위치와 covariance matrix 의 크기와 방향을 조정한다. 
 
 ## Influence function 
 특정 시간 $$t$$ 에서 플레이어 $$i$$의 pitch 위 $$p$$지점의 영향력을 나타내는 함수를  Influence function을 $$I_i(p,t)$$ 라고 정의한다.
@@ -61,17 +61,57 @@ $$f_i(p, t) = \mathbf{pdf} \space of \space \mathbf{X}$$
 > L) 단순 bivariate normal distribution 기반의  $$f_i(p,t)$$, <br>
 R) 플레이어의 속도와 방향이 고려된 Wide open space 의 $$f_i(p,t)$$   
 
-###  1) Simple $f$ modeling
-왼쪽 $f$ 는 플레이어의 속도를 고려하지 않고 거리만을 가지고 설계한 것이다.
+###  1) Simple $$f$$ modeling
+왼쪽 $$f$$ 는 플레이어의 속도를 고려하지 않고 거리만을 가지고 설계한 것이다.
 
 $$  \mu_t = p_i(t),  \Sigma_t = k * \begin{vmatrix} 1 & 0 \\ 0 & 1\end{vmatrix}$$
 
-위 모델은 선수가 뛰어가고 있는 방향에 대한 고려가 없다. 선수의 움직임과 반대방향으로 공이 전달되었을 때, 대부분의 선수들은 역동작에 걸리고 안정적인 볼 컨트롤이 어려워진다. 따라서 조금만 생각해 보아도, 왼쪽의 모델보다는 오른쪽 형태의 gaussian distributon 이 더 적합해보인다. 
+위 모델은 선수가 뛰어가고 있는 방향에 대한 고려가 없다. 단순히 선수의 현재 위치와 가까울수록 공간에 대한 점유도가 높아진다. 하지만, 실제 경기장위에서는 선수의 움직임과 반대방향으로 공이 전달되었을 때, 많은 선수들이 역동작에 걸려 안정적인 볼 컨트롤에 여러움을 겪는 모습을 쉽게 볼 수 있다. 따라서 조금만 생각해 보아도, 왼쪽의 모델보다는 진행방향에 있는 공간들에 대해 가중치가 포함된 오른쪽 형태의 gaussian distributon 이 더 적합해보인다. 
 
 ### 2) Wide open space $$f$$ modeling
 오른쪽 그림은 저자가 제안한 $$f$$ 이다. 
 
 $$\mu_t =  p_i(t) + \vec{s}_i(t)*0.5$$ 
-플레이어 $$i$$의 속도 $$\vec{s}_i(t)$$ 는 distribution 의 중심을 속도 방향으로 평행이동시켜 주는 역할을 한다.
 
-업데이트가 왜 안돼!
+플레이어 $$i$$의 속도 $$\vec{s}_i(t)$$ 는 distribution 의 중심을 그 방향으로 평행이동시켜 주는 역할을 한다. 
+이때, $$f$$ 의 covariance matrix $$\Sigma$$ 를 다음과 같이 decomposition 하면, eigenvenctor 로 구성된 $$V$$ 오 eigenvalues 값의 diagonal vector $$L$$ 로 표현가능하다.  
+
+
+$$\Sigma = \mathbf{VLV}^{-1}$$
+
+이때, $$ \sqrt{\mathbf{L}} =  \mathbf{S} $$ 이라 하면 다음과 같이 회전행렬 $$\mathbf{R}$$ 과 scale factor $$\mathbf{S}$$ 로 표현가능하다.
+
+$$\Sigma = \mathbf{RSSR}^{-1}$$
+
+$$\mathbf{R} = \begin{vmatrix} cos(\theta) & -sin(\theta) \\ sin(\theta) & cos(\theta)\end{vmatrix}$$
+
+특정 시점 $$t$$ 에 플레이어 $$i$$ 의 scale factor $$S_i(t)$$ 는 다음과 같이 표현된다.
+
+$$Srat_i(s) = {s^{2}\over13^{2}}$$
+
+$$S_i(t) = \begin{vmatrix} {R_i(t) + (R_i(t)Srat_i(\vec{s}(t)))\over 2} & 0 \\ 0 & {R_i(t) - (R_i(t)Srat_i(\vec{s}(t)))\over 2}\end{vmatrix}$$
+
+$$\Sigma_i(t) = R(\theta,t)S_i(t)S_i(t)R(\theta_i(t), t)^{-1}$$
+
+여기서, $$Srat_i(s)$$ 는 일반적인 선수들의 최고 속도를 13m/s 로 고정하고 현재 속도 $$s$$ 와 최고속력의 비율을 나타낸다. 이 값이 커지면 커질 수록 속도 방향으로 길고 가는 형태의 gaussian 분포가 나타나게 된다. $$R_i(t)$$ 는 선수-공과의 거리와 영향력 범위를 나타내는 값인데 본 연구에서는 도메인 지식을 활용해서 [4,10] 의 값을 가지는 함수로 지정하였다. 공과의 거리가 가까울수록 선수가 점유하는 공간은 좁아진다는 개념을 기초로 하고 있다. 공이 가까이 있는 경우에는 볼을 컨트롤 한다거나, 볼을 가진 선수들을 마크하는 상황이 많기 때문에 오히려 점유하는 공간이 제한된다. 거리-영향력 범위 함수는 아래 그래프와 같은 값을 가진다.
+
+
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/6fe3c80a-8140-4e66-9669-2f818d8310a7)
+
+
+## 최종 Pitch Control 모형
+
+드디어 선수, 시점, 공의 위치에 따른 Inflence function $$I_i(p,t)$$ 에 대한 설명을 마무리했고, 최종적으로 모든 경기장 위의 점들에 대한 pitch control $$PC(p,t)$$
+값은 다음과 같이 구성한다. 
+
+$$PC(p,t) = \sigma(\Sigma_i I(p,t)-\Sigma_j I(p,t))$$
+
+여기서 $$\sigma$$ 는 logistic function 으로, 홈팀의 Influence 합과 어웨이 팀의 Influence 합을 뺀 값을  0-1사이의 값으로 변환시켜주는 역할을 한다. 이 PC의 값을 활용하여서 0.5 이상/미만으로 공간을 구분한다면 특정 공간이 어떤 팀에 의해서 점유되고 있는지를 표현하는 classifier 로 이해할 수도 있을 것이다. 
+
+## 모델 구현
+
+위 모델들을 python 을 통해서 다음과 같이 구현해보았다. 
+> Influence radius
+
+
+
