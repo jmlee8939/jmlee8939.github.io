@@ -1,9 +1,11 @@
 ---
 title: "[DP20] 축구경기에서 공간창출을 지표화 한다면? - 1"
-excerpt: "Voronoi Diagram 부터 Pitch control 모형 + Wide Open Spaces:A statistical technique for measuring space creation in professional soccer 논문 리뷰 및 구현하기"
-header:
+excerpt: "Wide Open Spaces:A statistical technique for measuring space creation in professional soccer 논문 리뷰 및 구현하기"
+header: 
+    teaser: "https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/086475a8-01db-43ac-abb9-37b898b26e3b"
 tags:
-  - Soccer
+  - 축구 모델링
+  - 축구 데이터
   - Voronoi Diagram
   - Pitch control
 ---
@@ -11,11 +13,11 @@ tags:
 # Preface
 ### *"Long time no see"* <br>
 
-참 오랜만에 글을 써 본다. 머릿속에 데이터 및 축구에 대한 아이디어는 자꾸 떠오르는데 현실적으로 구현해볼 여유가 없는 것 같다. 억지로라도 꾸역꾸역 풀어놓아야겠다. 최근에 다시 축구 분야 연구들에 관심에 불이 붙어서 여기 저기 기웃하였다. 그 중에 CLASS 101에서 김현성님의 축구 데이터를 활용한 데이터 사이언스 강의를 들었는 데 정말 흥미로웠다. (대학원 졸업 이후에 핏투게더 지원을 진지하게 고민했었는 데, 해볼껄 그랬다.) 데이터 분석가 or 사이언티스트는 축구데이터를 어떻게 다루는지 궁금한 사람은 한 번 들어보는 것을 추천한다.  
+참 오랜만에 글을 써 본다. 머릿속에 데이터 및 축구에 대한 아이디어는 자꾸 떠오르는데 현실적으로 구현해볼 여유가 없는 것 같다. 억지로라도 꾸역꾸역 풀어놓아야겠다. 최근에 다시 축구 분야 연구들에 관심에 불이 붙어서 여기 저기 기웃하였다. 그 중에 CLASS 101에서 김현성님의 <파이썬 축구 데이터 분석>강의 들었는 데 정말 흥미로웠다. (대학원 졸업 이후에 핏투게더 지원을 진지하게 고민했었는 데, 해볼껄 그랬다.) 데이터 분석가 or 사이언티스트는 축구데이터를 어떻게 다루는지 궁금한 사람은 한 번 들어보는 것을 추천한다.  
 
 # Intro 
 이번 포스팅의 주제는 **"축구경기에서 공간을 지표화"** 이다.
-2008년 펩과르디올라의 바르셀로나가 "티키타카"를 앞세워 트레블을 달성한 이후로 "공간" 과 "점유" 가 현대 축구의 가장 중요한 요소가 되었다. 최근에는 이러한 공간 창출 및 점유의 트렌드 위에 강력한 압박과 빠른 공수전환속도가 가미되고 있다. 골, 어시스트, 패스, 드리블, 슛 등 통게적인 지표와는 다르게 해당 선수가 얼만큼의 공간을 점유하고 있는가?, 좀 더 나아가서 해당 선수의 움직임을 어떻게 평가할 것인가? 와 같이 선수가 창출하는 공간과 움직임에 대한 평가는 단순하게 지표화 하기 대단히 어렵다. 주변 선수들과의 상호작용 및 상황에 따라 완전히 달라지기 때문이다. 하지만, 이처럼 선수의 플레이를 단순히 표현하기 어렵기 때문에 축구가 더 재밌고, 분석해 볼만한 가치가 많기도 하다.   
+2008년 펩과르디올라의 바르셀로나가 "티키타카"를 앞세워 트레블을 달성한 이후로 "공간" 과 "점유" 가 현대 축구의 가장 중요한 요소가 되었다. 최근에는 이러한 공간 창출 및 점유의 트렌드 위에 강력한 압박과 빠른 공수전환속도가 가미되고 있다. 골, 어시스트, 패스, 드리블, 슛 등 통게적인 지표와는 다르게 해당 선수가 얼만큼의 공간을 점유하고 있는가? 좀 더 나아가서 해당 선수의 움직임을 어떻게 평가할 것인가? 와 같이 선수가 창출하는 공간과 움직임에 대한 평가는 단순하게 지표화 하기 대단히 어렵다. 주변 선수들과의 상호작용 및 상황에 따라 완전히 달라지기 때문이다. 하지만, 이처럼 선수의 플레이를 단순히 표현하기 어렵기 때문에 축구가 더 재밌고, 분석해 볼만한 가치가 많기도 하다.   
 
 # EPTS
 과거에는 선수들의 통계지표만 활용하여 플레이를 분석했다면, 최근에는 EPTS(Electronic Performance and Tracking Systems) 기술을 통해서 실시간으로 선수들의 좌표 데이터를 생성해낸다. GPS 기기 또는 Computer Vision 기술을 활용해서 이러한 데이터들을 뽑아내는데, 이러한 좌표 데이터가 매우 정교해 지면서 이를 기반으로 선수들의 플레이를 모델링하는 것이 가능해졌다. 너무나 감사하게도 Metrica_sports 에서 3경기 분량의 ETPS 예시 경기 데이터를 무료로 공개하고 있고, kloppy package 에서 축구 데이터 분석을 위한 다양한 전처리 함수 및 시각화 함수를 제공하고 있어서 데이터를 이것 저것 다뤄볼 수 있다.
@@ -112,7 +114,138 @@ $$PC(p,t) = \sigma(\Sigma_i I(p,t)-\Sigma_j I(p,t))$$
 
 이 모형을 통해서 매 시점마다의 선수들이 점유하는 공간을 표현할 수 있고, 이 논문에서는 이를 활용해서 선수들의 공간 창출 움직임을 수치화 하는 방법까지 제시한다. 그 내용은 다음 글에서 계속해서 설명하려고 한다. (쓰다보니까 글이 너무 길어짐.)
 
-## 모델 구현
+# 모델 구현
 
 위 모델들을 python 을 통해서 다음과 같이 구현해보았다. 
-> Influence radius
+
+## 데이터 불러오기 
+
+우선 데이터는 [metrica-sports](https://github.com/metrica-sports), 또는 [kloppy](https://github.com/PySport/kloppy) 의 ETPS, event 데이터 셋을 사용한다. 가장 간단한 방법은 klopy package를 통해 불려오는 것이다.
+
+```python
+from kloppy import metrica
+
+dataset = metrica.load_open_data(
+    match_id=1,
+    
+    # Optional arguments
+    limit=2000,
+    coordinates="metrica"
+)
+
+dataset.to_df().head()
+```
+| period_id | timestamp | frame_id | ball_state | ball_owning_team_id | ball_x |  ball_y |  ball_z | home_11_x | home_11_y |     ... | away_22_d | away_22_s | away_23_x | away_23_y | away_23_d | away_23_s | away_24_x | away_24_y | away_24_d | away_24_s |      |
+|----------:|----------:|---------:|-----------:|--------------------:|-------:|--------:|--------:|----------:|----------:|--------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|------|
+|         0 |         1 |     0.00 |          1 |                None |   None | 0.45472 | 0.61291 |      None |   0.00082 | 0.51762 |       ... |      None |      None |   0.43693 |   0.94998 |      None |      None |   0.37833 |   0.72617 |      None | None |
+|         1 |         1 |     0.04 |          2 |                None |   None | 0.49645 | 0.59344 |      None |   0.00096 | 0.51762 |       ... |      None |      None |   0.43693 |   0.94998 |      None |      None |   0.37833 |   0.72617 |      None | None |
+|         2 |         1 |     0.08 |          3 |                None |   None | 0.53716 | 0.57444 |      None |   0.00114 | 0.51762 |       ... |      None |      None |   0.43693 |   0.94998 |      None |      None |   0.37833 |   0.72617 |      None | None |
+|         3 |         1 |     0.12 |          4 |                None |   None | 0.55346 | 0.57769 |      None |   0.00121 | 0.51762 |       ... |      None |      None |   0.43644 |   0.94962 |      None |      None |   0.37756 |   0.72527 |      None | None |
+|         4 |         1 |     0.16 |          5 |                None |   None | 0.55512 | 0.59430 |      None |   0.00129 | 0.51762 |       ... |      None |      None |   0.43580 |   0.95023 |      None |      None |   0.37663 |   0.72457 |      None | None |
+
+## 전처리
+
+사실 모델링보다 데이터 전처리가 훨씬 오래걸리는 일이지만... 안그래도 긴 글이 더 길어지니까 스킵! 프레임마다 제공되는 선수들의 위치 정보를 활용해서 프레임 마다의 속도를 계산하고 홈, 어웨이 팀 선수들을 보기 좋게 라벨링 했다. 그리고 이벤트 데이터까지 조인하여서 각 프레임마다 어떤 플레이가 일어났는지 어느 팀이 공을 소유하고 있는지가 함께 나타나는 데이터 셋을 구성했다.
+```py
+#... 전처리 끝난 Dataframe df
+df.head()
+```
+| Period | Frame | Time [s] | H11_x |   H11_y |     H1_x |     H1_y |     H2_x |     H2_y |     H3_x |      ... | A10_v_abs |  A12_x_v | A12_y_v | A12_v_abs | A13_x_v | A13_y_v | A13_v_abs | A14_x_v | A14_y_v | A14_v_abs |     |
+|-------:|------:|---------:|------:|--------:|---------:|---------:|---------:|---------:|---------:|---------:|----------:|---------:|--------:|----------:|--------:|--------:|----------:|--------:|--------:|----------:|-----|
+|      2 |     1 |        1 |  0.04 | 0.08528 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... |      NaN |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+|      3 |     1 |        2 |  0.08 | 0.09984 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... | 2.910703 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+|      4 |     1 |        3 |  0.12 | 0.11856 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... | 3.028292 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+|      5 |     1 |        4 |  0.16 | 0.12584 | 32.80184 | 33.92688 | 44.41556 | 35.03448 | 33.31184 | 32.18176 |       ... | 3.144990 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+|      6 |     1 |        5 |  0.20 | 0.13416 | 32.80184 | 33.90088 | 44.38292 | 35.01056 | 33.33224 | 32.18592 |       ... | 3.163107 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+
+전처리가 끝난 데이터셋에서 특정 프레임(1000)에서의 선수의 위치, 속도, 공의 위치를 별도의 변수로 선언해둔다. (의식의 흐름대로 진행하다보니 코드가 깔끔하지 않으니 주의...)
+
+```python
+frame = 1000
+
+df1 = df.loc[:, [i for i in df.columns if 'v' not in i]]
+df2 = df.loc[:, [i for i in df.columns if 'v' in i]]
+positions = df1[df1['Frame'] == frame].iloc[:,3:].drop(['Ball_x', 'Ball_y'], axis=1).dropna(axis=1).iloc[0,:]
+velocities = np.array(df2[df1['Frame'] == frame].drop(['Ball_x_v', 'Ball_y_v', 'Ball_v_abs'], axis=1).dropna(axis=1).iloc[0,:])
+points = np.array([[positions[2*i], positions[2*i+1]] for i in range(len(positions)//2)])
+velocities = np.array([[velocities[3*i], velocities[3*i+1]] for i in range(len(velocities)//3)])
+players = np.array([positions.index[2*i].split('_')[0] for i in range(len(points))])
+ball_x, ball_y = df.loc[df['Frame'] == frame, ['Ball_x', 'Ball_y']].values[0]
+ball = np.array([ball_x, ball_y])
+```
+## Pitch control model
+>  Influence radius
+
+논문에서 정의한 Influence radius 먼저 정의해두고..
+
+```py
+def influence_radius(ball, position):
+    distance = np.linalg.norm(ball - position)
+    output = np.minimum(3/200*(distance)**2 + 4, 10)
+    return output
+```
+
+> Influence function
+
+Influence function 을 구현한다.
+
+```py
+def influence_function(position, locations, velocity, ball):
+    mu = position + 0.5*velocity
+    srat = (velocity[0]**2 + velocity[1]**2)/13**2
+    theta = np.arctan(velocity[1]/(velocity[0]+1e-7))
+    R = np.array([[np.cos(theta), -np.sin(theta)],[np.sin(theta), np.cos(theta)]])
+    R_inv = np.array([[np.cos(theta), np.sin(theta)],[-np.sin(theta), np.cos(theta)]])
+    Ri = influence_radius(ball, position)
+    S = np.array([[(1 + srat)*Ri/2, 0],[0, (1-srat)*Ri/2]])
+    Cov = np.matmul(np.matmul(np.matmul(R, S), S), R_inv)
+    new_gaussian = multivariate_normal(mu, Cov)
+    out = new_gaussian.pdf(locations)
+    out /= new_gaussian.pdf(position)
+    return out
+```
+이를 시각화 하면,
+
+```py
+x, y = np.mgrid[0:104:0.1, 0:68:0.1]
+locations = np.concatenate([x.reshape(-1,1), y.reshape(-1,1)], axis=1)
+
+s_h, s_a = 0, 0
+for i, j, k in zip(players, points, velocities):
+    if 'H' in i:        
+        s_h += influence_function(j, locations, k, ball)
+    else :
+        s_a += influence_function(j, locations, k, ball)
+
+z = 1 / (1 + np.exp(- s_h + s_a))
+
+fig, ax = draw_pitch('white', 'black')
+ax.contourf(x, y, z.reshape(1040, 680), alpha=0.8)
+for t, p, v in zip(players, points, velocities):
+    if 'H' in t:
+        color = 'red'
+    else:
+        color = 'blue'
+    ax.scatter(p[0], p[1], c=color, s=20)
+    ax.arrow(p[0], p[1], v[0], v[1], color='green', head_width = 1)
+
+ax.scatter(ball_x, ball_y, color='black')
+```
+
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/086475a8-01db-43ac-abb9-37b898b26e3b)
+
+끝.
+
+
+# Wrap up 
+논문 읽으면서 이렇게 재미있있었던 적이 있었나 싶다. 바르셀로나가 축구를 괜히 잘하는 게 아니구나... 다음 글은 이 Pitch control 모형으로 선수들의 움직임을 평가하는 지표를 만드는 내용을 글로 정리해야겠다. 정리하는 글을 쓰다보니까 생각보다 너무 시간이 많이 든다.이렇게 진지모드로 글을 쓰려고 했던 것은 아닌데 말이지. 정리하다보면 점점 요령이 생겨나리라 믿는다.
+
+# References
+[metrica-sports](https://github.com/metrica-sports) <br>
+[kloppy](https://github.com/PySport/kloppy)
+<br>
+[파이썬 축구 데이터 분석-김현성님](https://class101.net/ko/search?query=%EC%B6%95%EA%B5%AC)
+<br>
+[Metrica-pitch- control](https://github.com/anenglishgoat/Metrica-pitch-control)
+<br>
+[Wide Open Spaces: A statistical technique for measuring space creation in professional soccer](https://static.capabiliaserver.com/frontend/clients/barca/wp_prod/wp-content/uploads/2018/05/Wide-Open-Spaces.pdf)
