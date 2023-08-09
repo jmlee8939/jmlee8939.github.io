@@ -240,7 +240,7 @@ ax.scatter(ball_x, ball_y, color='black')
 
 ![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/086475a8-01db-43ac-abb9-37b898b26e3b)
 
-끝.
+그럴싸한 pitch control 모델이 완성되었다! 
 
 
 # Wrap up 
