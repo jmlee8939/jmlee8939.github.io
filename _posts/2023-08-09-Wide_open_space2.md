@@ -159,6 +159,205 @@ $$SOG_i(t) = \begin{cases} G_i(t) & if \space G_i(t)  \ge \epsilon \\ 0 & otherw
 
 이 논문에 나오는 여러가지 지표나 모델들을 구현하는 과정에서 단순 구현은 그리 어려운 일이 아니지만, RAW 상태의 데이터 전처리, 머신러닝 학습셋 구성, 시각화 등 부수적인 부분들이 훨씬 품이 많이 드는 일이었다.... 오랜만에 python 공부하고 오히려 좋아 🤣. 하지만 이 글에 겪었던 고생을 하나하나 늘어 놓을수는 없으니 넘어가도록 하고 중요 구현 부분만 소개하고자 한다. (자세한 전처리 코드는 [Wide-Open-Space](https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model)에 정리해 두었음)
 
+## Space Quality model 학습
+저자가 어떤 tool을 활용해서 개발했는지는 모르겠지만, 나는 다루기 편한 pytorch 를 활용해서 학습을 진행했다. (학습 데이터 구성은 너무 복잡하니 스킵..)
+
+### Torch 환경 확인
+
+```python
+device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
+print (f"PyTorch version:{torch.__version__}") # 1.12.1 이상
+print(f"MPS device is built: {torch.backends.mps.is_built()}") # True 여야 합니다.
+print(f"MPS device is available: {torch.backends.mps.is_available()}") # True 여야 합니다.
+!python -c 'import platform;print(platform.platform())'
+```
+
+### Custom dataset 구성
+```python
+class custom_dataset(Dataset):
+    def __init__(self, file_path):
+        data = pd.read_csv(file_path)
+        data['Ball_x'] = data['Ball_x']/104
+        data['loc_x'] = data['loc_x']/104
+        data['Ball_y'] = data['Ball_y']/68
+        data['loc_y'] = data['loc_y']/68
+        self.columns = data.columns.to_list()
+        self.y = data['v_kl'].values.reshape(-1, 1)
+        self.x = data[['Ball_x', 'Ball_y', 'loc_x', 'loc_y']].values
+        self.length = len(data)
+    
+    def __getitem__(self, index):
+        x = torch.FloatTensor(self.x[index])
+        y = torch.FloatTensor(self.y[index])
+        return x, y
+    
+    def __len__(self):
+        return self.length
+    
+    def column(self):
+        return self.column
+```
+
+### Train - Test Split
+이미 ./Data/dataset.csv 에 학습 데이터셋 구성되어 있을때를 가정한다.
+```python
+dataset = custom_dataset('./Data/dataset.csv')
+dataset_size = len(dataset)
+
+train_size = int(dataset_size * 0.8)
+test_size = dataset_size - train_size
+
+generator1 = torch.Generator().manual_seed(1)
+train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
+
+train_dataloader = DataLoader(train_dataset, batch_size=1024, shuffle=True)
+test_dataloader = DataLoader(test_dataset, batch_size=1024)
+```
+
+### Simple Multi-layer neural network model
+논문에서는 1-hidden layer model 이었는 데, 내부 hidden node 갯수나 activation function 과 같은 세부정보가 없어서 새로 모델링 하였다.  
+
+```python
+class nnModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.hidden1 = nn.Linear(4, 24, bias=True)
+        self.hidden2 = nn.Linear(24, 16, bias= True)
+        self.hidden3 = nn.Linear(16, 8, bias= True)
+        self.output = nn.Linear(8, 1, bias=True)
+        #self.dropout = nn.Dropout(0.2)
+
+    def forward(self, x):
+        x = F.relu(self.hidden1(x))
+        x = F.relu(self.hidden2(x))
+        x = F.relu(self.hidden3(x))
+        x = F.relu(self.output(x))
+
+        return x
+    
+    def reset_parameters(self):
+        nn.init.kaiming_normal_(self.hidden1.weight)
+        self.hidden1.bias.data.fill_(0.01)
+        nn.init.kaiming_normal_(self.hidden2.weight)
+        self.hidden2.bias.data.fill_(0.01)
+        nn.init.kaiming_normal_(self.hidden3.weight)
+        self.hidden3.bias.data.fill_(0.01)
+        nn.init.kaiming_normal_(self.output.weight)
+        self.output.bias.data.fill_(0.01)
+```
+
+### parameter 초기화
+```python
+model = nnModel()
+model.reset_parameters()
+```
+
+### 구조 확인
+```python
+summary(model, (128, 4))
+```
+```
+
+----------------------------------------------------------------
+        Layer (type)               Output Shape         Param #
+================================================================
+            Linear-1              [-1, 128, 24]             120
+            Linear-2              [-1, 128, 16]             400
+            Linear-3               [-1, 128, 8]             136
+            Linear-4               [-1, 128, 1]               9
+================================================================
+Total params: 665
+Trainable params: 665
+Non-trainable params: 0
+----------------------------------------------------------------
+Input size (MB): 0.00
+Forward/backward pass size (MB): 0.05
+Params size (MB): 0.00
+Estimated Total Size (MB): 0.05
+----------------------------------------------------------------
+```
+
+### Traning 
+```python
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# loss function
+loss_fn = nn.MSELoss()
+
+# training
+train_loss_list=[]
+test_loss_list=[]
+
+n = len(train_dataloader)
+
+epoch = 50
+for i in range(epoch):
+    model.train()
+    train_loss = 0
+
+    #load data
+    for idx, data in enumerate(train_dataloader):
+        x, y = data
+        x = x.to(device)
+        y = y.to(device)
+
+        optimizer.zero_grad()
+
+        #forward propagation
+        y_pred = model(x)
+        loss = loss_fn(y_pred,y)
+        
+        #backpropagation
+        loss.backward()
+        optimizer.step()
+
+        train_loss += loss.mean()
+        print('\r' + ''*100, end="")
+        print('\r {}/{} batch_loss : {:.5f},  epochs: {}'.format(idx, n, loss.mean(), (i+1)), end="  ")
+    
+    train_loss /= n
+    train_loss_list.append(train_loss.item())
+
+    if (i+1)%10 == 1:
+        print('\r' + ''*100, end="")
+        print('\n epoch {}/{} train_loss : {:.5f}'.format(i+1, epoch, train_loss))
+
+    with torch.no_grad():
+        model.eval()
+        test_loss = 0
+        for x, y in test_dataloader:
+            x = x.to(device)
+            y = y.to(device)
+            
+            y_pred = model(x)
+            loss = loss_fn(y_pred,y)
+            
+            test_loss += loss.mean()
+
+        test_loss /= len(test_dataloader)
+        test_loss_list.append(test_loss.item())
+
+        if (i+1)%10 == 1:
+            print('\r' + ''*100, end="")
+            print('epoch {}/{} test_loss : {:.5f} \n'.format(i+1, epoch, test_loss))
+
+        if min(test_loss_list) >= test_loss.item():
+            torch.save(model.state_dict(), './SpaceValueModel/best_svmodel_sdict.pt')
+```
+
+### Verifying model
+학습이 잘 되었는가 확인하기 위해서 3가지 확인.
+
+> 1. Learning curve
+> 2. 실제값-예측값 plot
+> 3. 시각화
+
+
+
+
+
+아래 코드는 ETPS 데이터와 축구경기 event 데이터를 가지고, 특정시점에 pitch control, space quality,   
+
 ```python
 import numpy as np
 import pandas as pd
@@ -306,7 +505,7 @@ class space_model():
                 s_frame = t_df.loc[i, 'Start Frame']
                 n_list[int(s_frame-25):int(s_frame + 25*5)] = 0
         df['owning'] = n_list
-        return dfimport numpy as np
+        return df
 ```
 
 <p align=center>
