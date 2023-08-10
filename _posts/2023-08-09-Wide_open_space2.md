@@ -27,7 +27,7 @@ tags:
 
 >1. 공의 위치에 따라서 공간의 중요도가 달라진다.
 >2. 수비수들은 항상 중요한 공간들을 지키고 있다.
->3. 상대방의 골대와 가까워 질 수록 중요도가 높아진다.  
+>3. 상대방의 골대와 가까워질수록 중요도가 높아진다.  
 
 여기서 2번 가정 같은 경우, 빠른 역습과 같이 빠른 공수전환 상황에서 수비수들이 중요한 위치를 점유하고 있지 못하는 경우가 생길 수 있다. 따라서 지공 상황에서의 공간 중요도를 가정했다고 볼 수 있다. (바르셀로나 분석관 아니랄까봐... 최근 핫한 빠른 공수전환을 요하는 경기에서의 공간 중요도는 다르게 산출하는게 좋을 것 같다.)
 
@@ -41,7 +41,7 @@ $$V_{l}(t) = fn(p_b(t), p_{l}(t);\theta)$$
 
 이 함수를 학습시켜서 output 을 특정 시점, 특정 위치의 Space value로 활용한다.
 
-## $$fn$$ 학습데이터 구성
+## Space Quality $$fn$$ 학습데이터 구성
 
 어떤 머신러닝 문제를 풀던지 가장 중요한 것은 어떻게 학습 데이터를 구성하느냐가 아닐까 싶다. 데이터가 좋으면 어떤 모델로 학습하든 쉽게 다 소화시킬 수 있으니. $$fn$$ 을 학습하는 과정에서 $$p_l$$, $$p_b$$는 경기 데이터로 주어진다. 따라서 목표하는 target $$\hat{y}$$, $$\hat{V_{l}}$$ 를 어떻게 모델링 할 것인가 하는 아이디어만 제시하면 된다. 논문에서는 해당 시점, 해당 위치의 수비팀 pitch control 값 $$D_l(t)$$를 $$\hat{V_{l}}$$로 다음과 같이 활용하였다. (pitch control 계산은 이전 글 참조)
 
@@ -55,12 +55,263 @@ $$\hat{V}_l(t) = \begin{cases} 1,& D_l(t)>1 \\ D_l(t), & otherwise \end{cases}$$
 <img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/edae0b1f-d53f-4ab5-8c90-f0b73bd7ac03" width="300" height="200"/>
 </p>
 
-## $$fn$$ 학습
+## Space Quality $$fn$$ 학습
 
-학습은 아래외 같이 Mean Squared error 를 loss function $$\mathcal{L}$$ 의 minimzation 하는 파라미터 $$\theta$$ 를 찾는 방식으로 진핸된다. 함수가 Neural Network 이기 때문에,  
+학습은 아래외 같이 Mean Squared error 를 loss function $$\mathcal{L}$$ 의 값을 최소화 하는 파라미터 $$\theta$$ 를 찾는 방식으로 진행된다
 
-$$\mathcal{L} = arg$$ 
+$$\mathcal{L}(\theta) = \arg_\theta\min {1 \over n} \sum^n_{e=1}(\hat{y} - y)^2$$ 
+
+최적화 방법은 여러 Backpropagation 의 종류 중 하나인 Adam 을 활용하였다. 
+
+## 학습된 Space Quality model
+
+학습된 Space Quailty model은 공의 위치에 따라 다른 공간 중요도를 나타낸다. 이를 시각화 하면 아래와 같다. 공에서 가까운 공격방향의 공간 중요도가 크게 나타난다. 공격자 입장에서 쉽게 공을 전달하여 공격을 전개할 수 있는 공간들이기 때문이다.
 
 
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/5a9001a4-ffc1-4e85-b9bd-407736b67842" width="300" height="200"/>
+</p>
 
+저자는 여기서 *아이디어 3. 상대방의 골대와 가까워질수록 중요도가 높아진다.* 를 모델에 반영하기 위해서 아래 그림 (a) 와 같이 상대방 골대로 가까워질수록 공간의 중요도에 가중치를 부여한다. 나머지 그림은 가중치가 부여된 공간 중요도이다.
+
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a949ca88-53c4-4681-9b33-20e9fa006421" width="300" height="200"/>
+</p>
+
+## Quality of owned space $$Q$$
+
+이제 특정 선수가 점유하는 공간을 pitch control $$PC_i(t)$$로 모델링하였고, 특정 공간의 중요도를 space quality $$V(t)$$로 구현하였다. 특정 선수가 점유하는 공간의 중요도 $$Q_i(t)$$ 는 다음과 같이 표현할 수 있다.
+
+$$Q_i(t) = PC_i(t)V(t)$$ 
+
+이제 이 선수가 점유하고 있는 공간의 중요도를 수치화하였으니, 이 수치가 선수의 움직임에 따라 어떻게 변하는지를 통해 해당 선수를 평가할 수 있다.
+
+# Space Occupation Gain
+
+위의 $$Q_i$$ 가 특정시점 $$t$$ 부터 $$t+w$$ 까지 변한다고 할때, 이 값의 시간에 따른 변화량 $$G_i(t)$$ 룰 아래와 같이 정의하고 
+
+$$G_i(t) = \Delta Q_i$$
+
+이 값에 일종의 $$\epsilon$$ 를 도입하여 최종적으로 Space Occupation Gain $$SOG$$ 를 구현한다.
+
+$$SOG_i(t) = \begin{cases} G_i(t) & if \space G_i(t)  \ge \epsilon \\ 0 & otherwise \end{cases}$$
+
+ 여기서 $$\epsilon$$ 는 연속저인 Space Occupation Gain 를 Discrete 한 값으로 변환 시켜주는 역할을 한다. 아래 그림 중 왼쪽에서는 H4, H6, H12 선수가 넓은 공간으로 나오면서 SOG를 얻는 상황이다. 상대방의 견제를 멀리 하면서 공격 작업을 쉽게 할 수 있는 공간으로의 좋은 움직임이다. 오른쪽 그림에서는 H8, H9 두 공격수가 상대 수비수와 미드필더 사이의 빈 공간으로 파고들면서 더 좋은 공간을 점유하기 위해 움직이면서 $$\epsilon$$ 보다 높은 SOG 값을 창출하고 있다.
+
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/f7762aa2-6053-4bd3-880c-5e1ca4716664" align="center" width="40%">
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/34baa5cc-4d49-4f07-9dc0-73f05957895f" align="center" width="40%"/>
+</p>
+
+한 경기에서 각 선수가 발생시킨 SOG의 횟수, 평균 등을 보면 각 선수의 움직임이 얼마나 효과적이었는가를 나타낼 수 있다. 
+
+# Space Generation Gain
+
+축구경기에서 공간을 창출하는 방법은 자신이 직접 좋은 공간을 파고들고 점유하는 것도 있겠지만, 수비수들을 끌고 들어가면서 다른 선수에게 좋은 공간을 만들어 주는 방법도 있다. 한 때 유행했던 *가짜 9번 - False 9* 유형의 선수들이 바로 이런 유형의 움직임을 가져간다. (개인적으로 피르미누와 같이 이 위치에서 이타적인 선수들 너무 좋아함.) 이 움직임은 다음과 같이 모델링 할 수 있다.
+
+> 1. A팀 선수 a1와 B팀 선수 b1이 가까운 거리에 있다. $$(t)$$
+> 2. b1이 A팀의 다른 선수 a2와 가까워지면서, a1과 멀어진다. $$(t+w)$$
+> 3. a1가 b1과 멀어지면서 $$\epsilon$$ 보다 높은 SOG를 갖는다. $$(t+w)$$
+
+아래는 실제로 모델링을 통해 얻은 결과로 공격수 A10 가 파고드는 움직임을 통해 수비수 H2를 끌어당기고 측면공격수 A7 에게 공간을 만들어주는 Space Generation이 발생하는 장면이다. (그래도 H1이 빠르게 열린 공간을 커버해주고 있다.) 
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a9b183b9-dfc9-4286-b8ea-a040300dc84b" align="center" width="30%">
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/6d1113a5-f294-4e29-bcca-06a8cfc0154a" align="center" width="30%"/>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/e517052a-9b3c-4473-b7eb-7f0f856c3fd8" align="center" width="30%"/>
+</p>
+
+직접 구현한 모델들을 바탕으로 Metrica sports가 제공하는 Sample Game1 의 선수들의 SOG, SGG를 정리하면 다음과 같다. 
+
+| player | generation  SGG | receive SGG | active SOG | passive SOG |
+|-------:|-----------:|--------:|-------:|--------:|
+|     A1 |          3 |       3 |      8 |       0 |
+|    A10 |          5 |       7 |     73 |      10 |
+|    A11 |          0 |       0 |      0 |       0 |
+|    A12 |          1 |       2 |     23 |       1 |
+|    A13 |          0 |       1 |      4 |       0 |
+|    A14 |          2 |       2 |      7 |       1 |
+|     A2 |          1 |       6 |     10 |       0 |
+|     A3 |         11 |       3 |     18 |       3 |
+|     A4 |          3 |       8 |     37 |       5 |
+|     A5 |          9 |       1 |     42 |       5 |
+|     A6 |          1 |       9 |     27 |       1 |
+|     A7 |          5 |       4 |     50 |       5 |
+|     A8 |          0 |       0 |     17 |       7 |
+|     A9 |         17 |      12 |     99 |       5 |
+|     H1 |          1 |       2 |      3 |       0 |
+|    H10 |          3 |       3 |     42 |       9 |
+|    H11 |          0 |       0 |      0 |       0 |
+|    H12 |          5 |       4 |     35 |       4 |
+|    H13 |          0 |       0 |     17 |       6 |
+|    H14 |          0 |       0 |     11 |       1 |
+|     H2 |          0 |       2 |      8 |       0 |
+|     H3 |          7 |       3 |     16 |       0 |
+|     H4 |          0 |       1 |     18 |       4 |
+|     H5 |          2 |       2 |     42 |       6 |
+|     H6 |          0 |       3 |     25 |       0 |
+|     H7 |          0 |       3 |     16 |       1 |
+|     H8 |         11 |       8 |     46 |       9 |
+|     H9 |         12 |      10 |     69 |      16 |
+
+각 팀의 중앙공격수 H9, A9의 지표가 가장 눈에 띈다. 아무래도 가장 위협적인 공간에서 많은 움직임을 가져가기 때문인 듯 하다. 또 주목해보아야 할 값들은 A2, A4의 SGG 값이다. 이 두 측면 수비수는 다른 선수의 움직임을 통해 공간을 얻은 횟수가 만들어준 횟수보다 많다. 다른 선수들의 이타적인 움직임을 잘 활용할 수 있도록 측면의 부분전술이 좋은 팀이라고 볼 수 있겠다.
+
+# 모델 구현
+
+이 논문에 나오는 여러가지 지표나 모델들을 구현하는 과정에서 단순 구현은 그리 어려운 일이 아니지만, RAW 상태의 데이터 전처리, 머신러닝 학습셋 구성, 시각화 등 부수적인 부분들이 훨씬 품이 많이 드는 일이었다.... 오랜만에 python 공부하고 오히려 좋아 🤣. 하지만 이 글에 겪었던 고생을 하나하나 늘어 놓을수는 없으니 넘어가도록 하고 중요 구현 부분만 소개하고자 한다. (자세한 전처리 코드는 [Wide-Open-Space](https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model)에 정리해 두었음)
+
+```python
+import numpy as np
+import pandas as pd
+import math
+import torch
+from collections import Counter
+import warnings
+from scipy.stats import multivariate_normal
+from pandas.errors import SettingWithCopyWarning
+import matplotlib.pyplot as plt 
+from matplotlib.patches import Ellipse
+from matplotlib.ticker import FormatStrFormatter
+from torch import optim
+from torch.utils.data import Dataset
+from torch.utils.data import DataLoader
+from torch.utils.data import random_split
+from src.nn_model import nnModel
+from src.plot_utils import *
+from src.Influence_function import *
+from matplotlib import animation
+warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
+warnings.simplefilter(action="ignore", category=DeprecationWarning)
+
+class space_model():
+    def __init__(self, df, e_df):
+        self.df = self.preprocess(df, e_df)
+        self.velocities = None
+        self.positions = None
+        self.points = None
+        self.players = None
+        self.ball_x = None
+        self.ball_y = None
+        self.set_frame_flag = False
+
+    def set_frame(self, frame): 
+        t_df = self.df[self.df['Frame'] == frame]
+        self.period = t_df['Period'].values[0]
+        t_df = t_df.drop(['Period', 'Ball_x', 'Ball_y', 'Ball_v_abs'], axis=1).iloc[0,:]
+        self.positions = t_df[[i for i in t_df.index if (('_x' in i) or ('_y' in i)) and 'v' not in i]]
+        self.positions.dropna(inplace=True)
+        self.velocities = t_df[[i for i in t_df.index if '_v' in i]]
+        self.velocities.dropna(inplace=True)
+        self.points = np.array([[self.positions[2*i], self.positions[2*i+1]] for i in range(len(self.positions)//2)])
+        self.velocities = np.array([[self.velocities[3*i], self.velocities[3*i+1]] for i in range(len(self.velocities)//3)])
+        self.players = np.array([self.positions.index[2*i].split('_')[0] for i in range(len(self.points))])
+        self.ball_x, self.ball_y = self.df.loc[self.df['Frame'] == frame, ['Ball_x', 'Ball_y']].values[0]
+
+        if math.isnan(self.ball_x) :
+            self.set_frame_flag = False
+            return 
+        else :
+            self.set_frame_flag = True
+            return
+        
+    def pitch_control(self, locations):
+        s_h, s_a = 0, 0
+        if not self.set_frame_flag:
+            print('need to set frame')
+            return
+        for i, j, k in zip(self.players, self.points, self.velocities):
+            if 'H' in i:
+                s_h += influence_function2(j, locations, k, (self.ball_x, self.ball_y))
+            else :
+                s_a += influence_function2(j, locations, k, (self.ball_x, self.ball_y))
+                
+        z = 1 / (1 + np.exp(- s_h + s_a))
+        return z
+    
+    
+    def space_value(self, locations):
+        nn_model = nnModel()
+        nn_model.load_state_dict(torch.load('./SpaceValueModel/best_svmodel_sdict.pt'))
+
+        x = locations.reshape(-1, 2)[:,0].reshape(-1, 1) /104
+        y = locations.reshape(-1, 2)[:,1].reshape(-1, 1) /68
+    
+        ball_x = self.ball_x * np.ones_like(x) / 104
+        ball_y = self.ball_y * np.ones_like(y) / 68
+
+        input = torch.FloatTensor(np.concatenate([ball_x, ball_y, x, y], axis=1))
+        output = nn_model(input)
+        output = output.detach().numpy()
+
+        z = self.distance_from_goal(x*104, y*68)
+        output = output.reshape(-1) * z.reshape(-1) 
+
+        return output
+    
+    def space_quality(self, attacking_direction):
+        if not self.set_frame_flag:
+            print('need to set frame')
+            return
+        
+        space_quality = {}
+
+        for i,j in zip(self.players, self.points):
+            pc = self.pitch_control(j)
+            if i.startswith('A'):
+                pc = 1 - pc
+                if attacking_direction == 1:
+                    sv = self.space_value(np.array([104 - j[0], j[1]]))
+                else :
+                    sv = self.space_value(j)
+            else :
+                if attacking_direction == 1:
+                    sv = self.space_value(j)
+                else :
+                    sv = self.space_value(np.array([104 - j[0], j[1]]))
+            key = i
+            key = key + '_sq'
+            space_quality[key] = float(pc*sv)
+
+        return space_quality
+
+
+    def distance_from_goal(self, x, y):
+        dist = np.sqrt((104-x)**2 + (34-y)**2)
+        max_v = np.sqrt(104**2 + 34**2)
+        return (max_v - dist)/ (max_v)
+
+
+    def preprocess(self, df, e_df):
+        t_df = e_df[['Team', 'Type', 'Start Frame', 'End Frame', 'Period']]
+        t_df = pd.concat([t_df, t_df.shift(-1).rename(columns={'Team': 'Next Team', 
+                                                            'Type' : 'Next Type',
+                                                            'Start Frame' : 'Next Start Frame',
+                                                            'End Frame' : 'Next End Frame',
+                                                            'Period' : 'Next Period'})], axis=1)
+        t_df = t_df[(t_df['Start Frame'] < t_df['Next End Frame']) &
+            (t_df['Team'] == t_df['Next Team']) & 
+            (t_df['Period'] == t_df['Next Period']) &
+            ((t_df['Type'] == 'PASS') | (t_df['Type'] == 'RECOVERY'))]
+        t_df.reset_index(drop=True, inplace=True)
+
+        n_list = np.zeros(len(df))
+        for i in range(len(t_df)):
+            s_frame, f_frame = np.array(t_df.loc[i, ['Start Frame', 'Next End Frame']])
+            if math.isnan(s_frame*f_frame) == False:
+                if t_df.loc[i, 'Team'] == 'Home':
+                    n_list[int(s_frame) :int(f_frame)] = 1
+                if t_df.loc[i, 'Team'] == 'Away':
+                    n_list[int(s_frame):int(f_frame)] = 2
+        for i in range(len(t_df)):
+            if t_df.loc[i,'Type'] == 'RECOVERY':
+                s_frame = t_df.loc[i, 'Start Frame']
+                n_list[int(s_frame-25):int(s_frame + 25*5)] = 0
+        df['owning'] = n_list
+        return dfimport numpy as np
+```
+
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/2d7d2151-90cb-4b1c-9976-afa504c07375" width="500" height="250"/>
+</p>
+
+저자는 위 
 
