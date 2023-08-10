@@ -57,5 +57,10 @@ $$\hat{V}_l(t) = \begin{cases} 1,& D_l(t)>1 \\ D_l(t), & otherwise \end{cases}$$
 
 ## $$fn$$ 학습
 
-$
+학습은 아래외 같이 Mean Squared error 를 loss function $$\mathcal{L}$$ 의 minimzation 하는 파라미터 $$\theta$$ 를 찾는 방식으로 진핸된다. 함수가 Neural Network 이기 때문에,  
+
+$$\mathcal{L} = arg$$ 
+
+
+
 
