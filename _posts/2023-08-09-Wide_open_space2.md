@@ -69,13 +69,13 @@ $$\mathcal{L}(\theta) = \arg_\theta\min {1 \over n} \sum^n_{e=1}(\hat{y} - y)^2$
 
 
 <p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/5a9001a4-ffc1-4e85-b9bd-407736b67842" width="300" height="200"/>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/5a9001a4-ffc1-4e85-b9bd-407736b67842" width="500" height="300"/>
 </p>
 
 저자는 여기서 *아이디어 3. 상대방의 골대와 가까워질수록 중요도가 높아진다.* 를 모델에 반영하기 위해서 아래 그림 (a) 와 같이 상대방 골대로 가까워질수록 공간의 중요도에 가중치를 부여한다. 나머지 그림은 가중치가 부여된 공간 중요도이다.
 
 <p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a949ca88-53c4-4681-9b33-20e9fa006421" width="300" height="200"/>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a949ca88-53c4-4681-9b33-20e9fa006421" width="500" height="300"/>
 </p>
 
 ## Quality of owned space $$Q$$
