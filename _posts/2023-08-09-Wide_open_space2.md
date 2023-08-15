@@ -346,17 +346,37 @@ for i in range(epoch):
 ```
 
 ### Verifying model
-학습이 잘 되었는가 확인하기 위해서 3가지 확인.
+공의 위치에 따른 수비 선수들의 위치를 학습셋으로 활용하였기때문에 경기 흐름에 따라서 실제 y값 자체의 분산이 존재한다. 같은 위치에서 공격이 진행되더라도 역습상황에서의 수비선수들의 위치는 지공상황의 수비수들의 위치보다 분명 높게 형성될 것이기 때문이다. 따라서 모델의 정확도 보다는 경향성 즉, 실제 공격상황에서 수비수들이 지키고 있을만한 좋은 공간을 잘표현하고 있는가가 중요하다. 그래서 모델 학습이 잘 되었는지 다음과 같은 3가지 방법으로 확인하였다. 
 
 > 1. Learning curve
 > 2. 실제값-예측값 plot
 > 3. 시각화
 
+#### Learning curve
+Train loss와 Test loss가 epoch에 따라서 비슷하게 줄어들고 있다. (학습이 그럭저럭 진행되고 있다.)
 
+<p align=center>
+<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/742e1ffc-7b12-4891-80f7-9f9b82aa56e9" width="500" height="250"/>
+</p>
 
+#### 실제값-예측값 plot
 
+x축은 Target space quality 값 $$V_l(t)$$ 이고, y축은 예측 space quality 값 $$\hat{V}_l(t)$$ 이다. 모델이 데이터를 아주 잘 설명하고 있다고 보긴 어렵지만, 우리가 학습시키고자 하는 방향성은 어느정도 학습 된 것 같다. (공의 위치에 따른 수비선수들의 위치를 학습 시키다보니 운동장 위의 상황에 따른 데이터의 분산 자체가 존재한다. 예를 들어서 역습상황시의 수비위치와 지공상황의 수비위치는 분명 다르기에 학습 데이터의 target 값에 분산이 존재하고 모델링의 설명력 자체 한계가 존재할 수 밖에 없다.)
 
-아래 코드는 ETPS 데이터와 축구경기 event 데이터를 가지고, 특정시점에 pitch control, space quality,   
+<p align=center>
+<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/7babe5e7-6f70-4982-a26d-7cb17249a8e3" width="500", height="">
+</p>
+
+#### 예측값 plot
+
+학습된 모델로 부터 산출한 공에 위치에 따른 Space quality 를 시각화하면 왼쪽 아래 그림과 같다. 공격방향, 공 근처에 있는 공간들의 중요도가 높게 나타난다. 여기서 상대방 골대와 가까워질수록 더 중요하다는 도메인 지식을 추가하여(방법은 위에서 소개한 상대방 골대에 까워질 수록 가중치 부여) 최종적으로 오른쪽 아래 형태의 Space quality 모델을 구현하였다.
+
+<p align=center>
+<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/6c737076-1838-42d0-b611-19a6e15ab73a" align="center" width="40%">
+<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/cd42e7b6-b6e2-4ce7-ba2a-2408eea7ed68" align="center" width="40%"/>
+</p>
+
+아래 코드는 ETPS 데이터와 축구경기 event 데이터를 가지고, 특정시점에 pitch control, space quality, space value, 공을 소유하고 있는 팀을 구하는 함수를 구현한 것이다.   
 
 ```python
 import numpy as np
@@ -508,9 +528,15 @@ class space_model():
         return df
 ```
 
-<p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/2d7d2151-90cb-4b1c-9976-afa504c07375" width="500" height="250"/>
-</p>
+# Wrap Up
 
-저자는 위 
+처음 이 논문을 읽고 한번 구현해봐야지.. 라는 생각을 하고 정리를 해서 글을 쓰기까지 약 한달정도 걸렸다. 여유 시간이 있을때마다 조금씩 구현했는데 정리하고보니 별 내용이 없는 거 같지만 하는 과정에서는 꽤나 품이 많이 들었다. 처음 생각은 2주정도면 충분하다고 생각했는데 내 여유시간과 능력을 냉정하게 돌아보게 되었다. 축구를 좋아하는 팬으로서, 축구 데이터에 굉장히 관심이 많은 사람으로서, 모델링을 통해서 축구 선수의 움직임을 지표화하고 모델링하는 과정이 정말 흥미로웠다. 세계최고의 축구팀인 바르셀로나 데이터 분석팀을 맡았던 분의 연구결과이기에 실제 최고 레벨의 축구를 구사하는 팀이 어떻게 데이터를 활용하고 있는 가를 간접적으로나 체험할 수 있었다. 역시 데이터는 누가 어떻게 다루느냐에 다라서 그 가치가 결정되는 것 같다.
 
+[Github: metrica-sports](https://github.com/metrica-sports) <br>
+[Github: kloppy](https://github.com/PySport/kloppy)
+<br>
+[파이썬 축구 데이터 분석-김현성님](https://class101.net/ko/search?query=%EC%B6%95%EA%B5%AC)
+<br>
+[Metrica-pitch- control](https://github.com/anenglishgoat/Metrica-pitch-control)
+<br>
+[Wide Open Spaces: A statistical technique for measuring space creation in professional soccer](https://static.capabiliaserver.com/frontend/clients/barca/wp_prod/wp-content/uploads/2018/05/Wide-Open-Spaces.pdf)
