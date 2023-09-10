@@ -1,23 +1,213 @@
 ---
-title: "[DP20] 축구경기에서 공간창출을 지표화 한다면? - 2"
-excerpt: "Wide Open Spaces:A statistical technique for measuring space creation in professional soccer 논문 리뷰 및 구현하기"
+title: "[DP20] 골 결정력 판독기 - 기대득점 xG"
+excerpt: "Statsbomb 데이터를 활용한 기대득점 xG 모형 만들기 및 분석"
 header: 
-    teaser: "https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/086475a8-01db-43ac-abb9-37b898b26e3b"
+    teaser: ""
 tags:
   - 축구 모델링
   - 축구 데이터
-  - Space quality
-  - Space occupation gain
-  - Space generation gain
+  - expected goal
+  - xG
 ---
 
 # Preface
 
-이전 글에서 축구경기 EPTS 데이터를 활용해서, Javier Fernandez가 제시한 Pitch control 모형을 만들고 선수 개개인과 팀 단위의 공간에 대한 점유도를 수치화 하였다. 이 글에서는 공간의 중요도를 나타내는 Space quality 값을 계산하고, pitch control 값과 함께 활용하여 특정 시간에 각 선수가 얼마나 중요한 공간을 얼마나 잘 점유하고 있는가를 수치화한다. 이 수치를 활용해서 선수가 얼마나 중요한 공간을 잘 찾아가는지 또 다른 선수들에게 공간을 얼마나 잘 만들어주는지 나타내는 지표를 만들어 낸다. 
+*"I walk slowly, but I never walk backward." - Abraham Lincoln*
 
-"*선수들은 한 경기당 3분정도 공을 소유한다. 중요한 것은 87분동안 어떻게 뛰어다니는지이다. 이것이 좋은 선수와 나쁜 선수를 가른다.*"
+# Intro 
 
- 크루이프의 유명한 명언이다. 이 논문의 핵심은 크루이프가 말하는 좋은 선수를 어떻게 객관적으로 수치화 하여 구분해 낼 수 있는가에 대한 방법을 제시하는 것이다. 다시 한번 느끼는 바지만, 바르셀로나라는 축구팀은 참 대단한 것 같다. (명언 + 모델링이라니... 가슴이 웅장해진다.) 
+이번 주제는 꼭 한번 구현해보고 다뤄보고 싶었던 예측 지표들 xG(expected Goal), xA(expected Assist), xPV(expected personal value)이다.
+내 기억으로는 2017년 즈음 [Opta](https://www.statsperform.com/opta/) 를 통해서 기대득점 xG 라는 지표를 처음 접했던 것 같다. 
+xG 가 나오기 전 까지는 단순 통계정보들 (골, 패스, 점유율, 드리블, … 등) 을 활용한 1차원적인 축구 데이터 분석이 이루어졌다면,
+xG 의 등장은 축구에 데이터를 활용하여 더 고도화된 분석이 이루어지게 된 좋은 전환점이 되었다.  
+
+# 기대 득점 (xG)
+
+기대득점(expected Goal)은 슈팅하는 선수의 실력과 골키퍼의 능력, 실수 등을 배제하고 슈팅 위치, 슈팅 방법, 상황, 수비수와의 거리 등을 고려하여
+골이 들어갈 확률을 데이터를 기반으로 산출해낸 지표이다.
+
+<br>
+
+쉽게는 *"해당 슈팅상황에서 평균적인 선수가 슈팅했을때 골이 터질 확률"* 로 이해할 수 있다.  
+
+<br>
+
+현재는 공격수들의 슛팅 능력(또는 결정력)을 나타내는 지표로 매우 널리 쓰이고 있고, 
+이제는 축구를 좋아하는 사람들이면 모를 수가 없는 아주 대중적인 지표가 되었다. 
+처음엔 Opta Sports 에서 xG 지표를 소개하였는 데, 현재는 다양한 곳에서 각자의 방식으로 xG를 모델링하고 있다.
+
+# 모델링
+
+xG의 모델링은 아주 간단하다.
+
+$$y = f(X)$$ 
+
+여기서 $$y$$ 는 골이 될 확률 $$\mathbf{X} = [X_0,X_1,X_2, ...]$$ 는 다양한 슈팅이 발생하는 상황이다.
+여기서 골이 될 확률에 영향을 미치는 슈팅 상황 $$X_i$$ 에는 
+-	골대와의 거리
+- 골대와의 각도
+-	골키퍼의 위치
+-	가까운 수비수의 위치
+-	헤딩 여부
+-	공을 차기 직전 공격수의 속도
+<br>
+
+등이 있다.
+<br>
+
+위 모델을 실제 있었던 슈팅의 상황 및 골 데이터를 활용하여 학습을 진행하면 된다.
+
+학습에 사용될 골 데이터의 Target 값(골 여부)은 Goal, No goal의 binary class discrete value 인 데 반해서
+학습을 통해 만들어내고자 하는 xG model 의 예측 결과값 $$\hat{y}$$ 은 0~1 사이의 확률을 나타내는 continues value 이다.
+이런 경우에 가장 쉽게 생각해 낼 수 있는 모형이 Logistic Regression 이다.
+
+# Logistic regression
+
+Logistic regression은 가장 널리 사용되는 Classification model 중 하나이다. 이 모형에서 활용되는  logistic function 의 특성상 모형의 output 이 0~1 사이의 확률을 나타내는 값이 되고,
+무엇보다 단순한 모형으로 내부 파라미터로 $$X$$ 들과 $$y$$의 상관관계 및 중요도 분석이 용이하다. 
+(비슷한 설명력을 가정했을 때, 모형이 단순할 수록 본질에 가까운 정보를 담고 있지 않나..)
+만약 슈팅 상황에 대한 풍부한 정보가 갖추어져 있다면 더욱 복잡한 모형을 활용해도 좋을 것 같으나, Statsbomb 에서 제공하는 Event 데이터로는 Logistic regression 이 적당할 것 같다.  
+
+# Dataset
+
+Goal 모형의 학습에 활용할 데이터 셋은 [Statsbomb](https://github.com/statsbomb/open-data) 에서 제공하는 event 데이터를 활용했다.
+아쉽게도 최신 경기들의 event 데이터는 부족하지만, 모델링 해보기에는 충분한 것 같다.
+감사하게도 [kloppy](https://github.com/PySport/kloppy) 라이브러리에서 기본적인 전처리 및 데이터 로드 방식을 제공하니 훨씬 편하게 데이터를 끌어올 수 있다.
+
+<br>
+
+분석은 Python 을 활용해서 진행했고, 아래와 같은 라이브러리를 활용했다.
+
+```python
+import os
+import csv
+import pandas as pd
+import numpy as np
+from kloppy import statsbomb
+from mplsoccer.pitch import Pitch
+import matplotlib.pyplot as plt
+```
+
+전처리 과정이 끝난 event 데이터의 형태는 다음과 같다.
+
+```python
+df.head()
+```
+
+| index | event_type | result | success | period_id | timestamp | end_timestamp | ball_state | ball_owning_team | team_id | ... | coordinates_y | end_coordinates_x | end_coordinates_y | receiver_player_id | set_piece_type | body_part_type | pass_type | competition_id | season_id | match_id |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0 | PASS | COMPLETE | TRUE | 1 | 0.08 | 0.2088 | alive | AFC Bournemouth | AFC Bournemouth | ... | 40.05 | 59.35 | 42.55 | 3278 | KICK_OFF | RIGHT_FOOT | NaN | 2 | 27 | 3753988 |
+| 1 | PASS | COMPLETE | TRUE | 1 | 0.288 | 1.3821 | alive | AFC Bournemouth | AFC Bournemouth | ... | 42.55 | 51.85 | 41.15 | 3344 | NaN | RIGHT_FOOT | NaN | 2 | 27 | 3753988 |
+| 2 | PASS | COMPLETE | TRUE | 1 | 1.786 | 3.2996 | alive | AFC Bournemouth | AFC Bournemouth | ... | 41.15 | 36.15 | 55.75 | 3608 | NaN | LEFT_FOOT | NaN | 2 | 27 | 3753988 |
+| 3 | PASS | COMPLETE | TRUE | 1 | 3.38 | 5.2381 | alive | AFC Bournemouth | AFC Bournemouth | ... | 55.75 | 26.15 | 38.55 | 3341 | NaN | RIGHT_FOOT | NaN | 2 | 27 | 3753988 |
+| 4 | PASS | OUT | FALSE | 1 | 5.318 | 8.4233 | alive | AFC Bournemouth | AFC Bournemouth | ... | 39.75 | 25.75 | 1.05 | NaN | NaN | RIGHT_FOOT | LONG_BALL | 2 | 27 | 3753988 |
+
+이 중에 승부차기를 제외한 슈팅 event를 추리면, 
+
+```python
+# except for penalty shotout
+df = df[df['period_id'] != 5]
+# only for shot event
+df_shot = df[df['event_type'] == 'SHOT']
+df_shot.head()
+```
+|        Index | event_type | result | success | period_id | timestamp | end_timestamp | ball_state | ball_owning_team | ... | coordinates_y | end_coordinates_x | end_coordinates_y | receiver_player_id | set_piece_type | body_part_type | pass_type | competition_id | season_id | match_id |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 30 | SHOT | OFF_TARGET | FALSE | 1 | 128.322 | NaN | alive | AFC Bournemouth | ... | 45.15 | NaN | NaN | NaN | NaN | HEAD | NaN | 2 | 27 |  |
+| 50 | SHOT | OFF_TARGET | FALSE | 1 | 288.112 | NaN | alive | Swansea City | ... | 45.65 | NaN | NaN | NaN | NaN | RIGHT_FOOT | NaN | 2 | 27 |  |
+| 90 | SHOT | OFF_TARGET | FALSE | 1 | 466.642 | NaN | alive | AFC Bournemouth | ... | 42.55 | NaN | NaN | NaN | NaN | LEFT_FOOT | NaN | 2 | 27 |  |
+| 104 | SHOT | OFF_TARGET | FALSE | 1 | 577.702 | NaN | alive | AFC Bournemouth | ... | 53.55 | NaN | NaN | NaN | NaN | LEFT_FOOT | NaN | 2 | 27 |  |
+| 133 | SHOT | POST | FALSE | 1 | 804.288 | NaN | alive | AFC Bournemouth | ... | 28.75 | NaN | NaN | NaN | NaN | LEFT_FOOT | NaN | 2 | 27 |  |
+
+많은 column 들 중에서 xG 모형의 학습에 사용할 feature는 다음과 같다. 
+
+- 슈팅지점과 골라인 가운데 점 사이의 거리
+- 슈팅지점과 양쪽 포스트 사이의 각도
+- 슈팅 타입(왼발, 오른발, 그 외)
+
+마음같아선 **골키퍼 위치, 슈팅하는 선수의 순간 속도, 수비수 위치** 등 훨씬 더 많은 지표들을 추가하고 싶지만 statsbomb 데이터는 선수들의 좌표가 없는 Event 데이터라 세 지표로 아주 간단한 xG 모형을 만들어 보았다.
+
+# 데이터 분포
+
+우선, 슈팅 이벤트 위치 분포를 확인해보자, 아래 그래프는 각각 슈팅 위치의 x좌표, y좌표이다.
+
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/fe29dd68-d58f-410f-89da-3655c25b0153" align="center" width="40%">
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/4de78d5d-e15b-4e7a-a643-3308f00fc574" align="center" width="40%"/>
+</p>
+
+골라인에서 10~20m 위치, pitch 가운데에서 슈팅을 가장 많이 시도했다.
+
+<br>
+
+슈팅 위치와 골 간에 어떤 경향성을 보이는지 무작위로 50개 정도 추려서 그 결과를 확인해보았다.
+
+```python
+## sample 100 goals
+np.random.seed(10)
+sample_idx = np.random.choice(range(len(df_shot)), size=100)
+
+pitch = Pitch(pitch_color='#e7f1fa', line_zorder=1, line_color='black', pitch_type="statsbomb")
+fig, ax = pitch.draw()
+for i in sample_idx:
+    if df_shot.iloc[i]['result'] == 'GOAL':
+        col = 'red'
+    else :
+        col = 'blue'  
+    ax.scatter(df_shot.iloc[i]['coordinates_x'], df_shot.iloc[i]['coordinates_y'], color = col)
+```
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/18fffe1b-5169-4ec3-8d39-0a0b7df4d75c" width="300" height="200"/>
+</p>
+
+골대 가까운 곳, 중앙 부근에서 골이 많이 터지고, 총 슈팅 대비 골 전환률은 10% 정도 밖에 안된다. 
+
+# 데이터 전처리
+
+좌표 데이터를 골라인과의 거리, 유효 슈팅 각도로 전처리하고, 슈팅 형태는 학습에 사용할 수 있도록 one-hot encoding 한다. 
+
+```python
+#statsbomb 데이터 경기장 규격 (120, 80)
+#골대 규격 (w, h) = (7.32, 2.44)
+#골대 위치 (x1, y1), (x2, y2) = (120, 43.66), (120, 36.34)
+
+def distance(points):
+    output = np.sqrt(((np.array([120, 40]) - points)**2).sum(axis=1))
+    return output
+
+def on_target_angle(points):
+    c = 7.32
+    a = np.sqrt(((np.array([120, 43.66]) - points)**2).sum(axis=1))
+    b = np.sqrt(((np.array([120, 36.34]) - points)**2).sum(axis=1))
+    cos_theta = (a**2 + b**2 - c**2)/(2 * a * b)
+    theta = np.arccos(cos_theta)
+    return theta 
+
+shot_points = pd.concat([df_shot['coordinates_x'], df_shot['coordinates_y']], axis=1).values
+# 거리, 각도 계산
+df_shot['shot_distance'] = distance(shot_points)
+df_shot['shot_angle'] = on_target_angle(shot_points)
+dt = df_shot[['success', 'shot_distance', 'shot_angle', 'body_part_type']]
+# y 값 0, 1로 변경
+dt['success'] = dt['success'].apply(lambda x:1 if x else 0)
+# 슈팅 타입 one-hot encoding
+dt = pd.concat([dt.loc[:,~dt.columns.isin(['body_part_type'])],pd.get_dummies(dt['body_part_type'])], axis=1)
+```
+
+전처리를 거친 데이터는 아래와 같다.
+
+```python
+dt.head()
+```
+
+| Index |        success | shot_distance | shot_angle | HEAD | LEFT_FOOT | OTHER | RIGHT_FOOT |
+|---|---|---|---|---|---|---|---|
+| 30 | 0 | 9.388557 | 0.65538 | 1 | 0 | 0 | 0 |
+| 50 | 0 | 21.408993 | 0.327487 | 0 | 0 | 0 | 1 |
+| 90 | 0 | 10.756626 | 0.64201 | 0 | 1 | 0 | 0 |
+| 104 | 0 | 24.365242 | 0.250102 | 0 | 1 | 0 | 0 |
+| 133 | 0 | 25.648879 | 0.256059 | 0 | 1 | 0 | 0 |
+
 
 
 # Space Quality
@@ -53,7 +243,7 @@ $$\hat{V}_l(t) = \begin{cases} 1,& D_l(t)>1 \\ D_l(t), & otherwise \end{cases}$$
 실제 학습에 사용되는 $$\hat{V}_l(t)$$ 를 시각화 하면 다음과 같다.
 검은 점은 특정 시점의 공의 위치이고 붉게 표현된 부분이 수비팀의 pitch control 값이다. (논문에서는 pitch 위의 모든 점들을 학습 set 으로 활용하지는 않고 가로, 세로를 각각 21, 15등분 하여 한 시점당 315 개의 학습 데이터셋이 구성되도록 했다.)
 <p align=center>
-<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/edae0b1f-d53f-4ab5-8c90-f0b73bd7ac03" width="300" height="200"/>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/18fffe1b-5169-4ec3-8d39-0a0b7df4d75c" width="300" height="200"/>
 </p>
 
 ## Space Quality $$fn$$ 학습
@@ -362,7 +552,7 @@ Train loss와 Test loss가 epoch에 따라서 비슷하게 줄어들고 있다. 
 
 #### 실제값-예측값 plot
 
-x축은 Target space quality 값 $$V_l(t)$$ 이고, y축은 예측 space quality 값 $$\hat{V}_l(t)$$ 이다. 모델이 데이터를 아주 잘 설명하고 있다고 보긴 어렵지만, 우리가 학습시키고자 하는 방향성은 어느정도 학습 된 것 같다. (공의 위치에 따른 수비선수들의 위치를 학습 시키다보니 운동장 위의 상황에 따른 데이터의 분산이 존재한다. 예를 들어서 역습상황시의 수비위치와 지공상황의 수비위치는 분명 다르기에 학습 데이터의 target 값에 분산이 존재하고 모델링의 설명력 자체의 한계가 존재할 수 밖에 없다.)
+x축은 Target space quality 값 $$V_l(t)$$ 이고, y축은 예측 space quality 값 $$\hat{V}_l(t)$$ 이다. 모델이 데이터를 아주 잘 설명하고 있다고 보긴 어렵지만, 우리가 학습시키고자 하는 방향성은 어느정도 학습 된 것 같다. (공의 위치에 따른 수비선수들의 위치를 학습 시키다보니 운동장 위의 상황에 따른 데이터의 분산 자체가 존재한다. 예를 들어서 역습상황시의 수비위치와 지공상황의 수비위치는 분명 다르기에 학습 데이터의 target 값에 분산이 존재하고 모델링의 설명력 자체 한계가 존재할 수 밖에 없다.)
 
 <p align=center>
 <img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/7babe5e7-6f70-4982-a26d-7cb17249a8e3" width="500", height="250">
