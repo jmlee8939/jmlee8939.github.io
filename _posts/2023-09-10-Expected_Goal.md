@@ -233,7 +233,7 @@ train-set, test-set 을 나누고
 ```python
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 ```
-학습.
+학습. (넘 간단하쥬...)
 ```python
 lr = LogisticRegression()
 lr.fit(X_train, y_train)
@@ -289,7 +289,7 @@ plt.show()
 <br>
 
 
-이와 같은 *class imbalance* 상황에서는 모델이 얼마나 설명력을 가지는 가를 나타내는 지표로 AUC(Area under curce)를 주로 활용한다. binary class 를 구분하는 treshold 의 값이 변할때 TPR(True Positive Rate)와 FPR(False Positive Rate)의 값으로 그린 그래프의 아래 면적으로, class imbalance 비율에 관계없이 쉽게 모형이 얼마나 두 클래스의 분포를 잘 구분하고 있는 지를 나타내는 지표이다.
+따라서 이와 같은 *class imbalance* 상황에서는 모델이 얼마나 설명력을 가지는 가를 나타내는 지표로 AUC(Area under curce)를 주로 활용한다. binary class 를 구분하는 treshold 의 값이 변할때 TPR(True Positive Rate)와 FPR(False Positive Rate)의 값으로 그린 그래프의 아래 면적으로, class imbalance 비율에 관계없이 쉽게 모형이 얼마나 두 클래스의 분포를 잘 구분하고 있는 지를 나타내는 지표이다.
 
 ## AUC-ROC curve
 ```python
@@ -313,8 +313,8 @@ plt.ylabel('TPR')
 AUC-ROC curve의 형태 및 AUC 값으로 보아 xG 모형이 골의 경향성을 잘 설명하고 있음을 확인할 수 있다. 하지만 이 모형이 정말 xG 모형으로 쓸만한 놈인가 좀 더 다각도로 확인해보고자 아래 3가지를 더 들여다보았다.
  
 > 1. 회기 계수를 통한 변수 중요도 Check. 
-> 2. 
-> 3.
+> 2. 총 기대득점(xG)의 합
+> 3. statsbomb 자체 xG 값과 비교
 
 
 
