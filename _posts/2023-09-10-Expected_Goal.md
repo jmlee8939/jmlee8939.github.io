@@ -2,7 +2,7 @@
 title: "[DP20] 골 결정력 판독기 - 기대득점 xG"
 excerpt: "Statsbomb 데이터를 활용한 기대득점 xG 모형 만들기 및 분석"
 header: 
-    teaser: ""
+    teaser: "https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a706cdb7-8896-4a4e-8d56-d7bf1fc1589e"
 tags:
   - 축구 모델링
   - 축구 데이터
@@ -16,10 +16,10 @@ tags:
 
 # Intro 
 
-이번 주제는 꼭 한번 구현해보고 다뤄보고 싶었던 예측 지표들 xG(expected Goal), xA(expected Assist), xPV(expected personal value)이다.
+이번 주제는 꼭 한번 구현해보고 다뤄보고 싶었던 예측 지표들 xG(expected Goal), xA(expected Assist), xPV(expected personal value) 중 가장 맏형인 xG 이다.
 내 기억으로는 2017년 즈음 [Opta](https://www.statsperform.com/opta/) 를 통해서 기대득점 xG 라는 지표를 처음 접했던 것 같다. 
 xG 가 나오기 전 까지는 단순 통계정보들 (골, 패스, 점유율, 드리블, … 등) 을 활용한 1차원적인 축구 데이터 분석이 이루어졌다면,
-xG 의 등장은 축구에 데이터를 활용하여 더 고도화된 분석이 이루어지게 된 좋은 전환점이 되었다.  
+xG 의 등장은 축구에 데이터를 활용하여 더 고도화된 분석이 이루어지게 된 전환점이 되었다.  
 
 # 기대 득점 (xG)
 
@@ -34,7 +34,7 @@ xG 의 등장은 축구에 데이터를 활용하여 더 고도화된 분석이 
 
 현재는 공격수들의 슛팅 능력(또는 결정력)을 나타내는 지표로 매우 널리 쓰이고 있고, 
 이제는 축구를 좋아하는 사람들이면 모를 수가 없는 아주 대중적인 지표가 되었다. 
-처음엔 Opta Sports 에서 xG 지표를 소개하였는 데, 현재는 다양한 곳에서 각자의 방식으로 xG를 모델링하고 있다.
+처음엔 Opta Sports 에서 xG 지표를 개발 및 소개하였는 데, 현재는 다양한 곳에서 각자의 방식으로 xG를 모델링하고 있다.
 
 # 모델링
 
@@ -48,9 +48,11 @@ $$y = f(X)$$
 -   골대와의 각도
 -	골키퍼의 위치
 -	가까운 수비수의 위치
--	헤딩 여부
+-	슈팅 방법 (왼발, 오른발, 헤딩, 그 외)
 -	공을 차기 직전 공격수의 속도
 -   어시스트 여부
+-   어시스트 패스 타입
+-   세트피스(페널티킥, 프리킥, 코너킥)
 <br>
 
 등이 있다.
@@ -66,7 +68,7 @@ $$y = f(X)$$
 
 Goal 모형의 학습에 활용할 데이터 셋은 [Statsbomb](https://github.com/statsbomb/open-data) 에서 제공하는 event 데이터를 활용했다.
 아쉽게도 최신 경기들의 event 데이터는 부족하지만, 모델링 해보기에는 충분한 것 같다.
-감사하게도 [kloppy](https://github.com/PySport/kloppy) 및 [mplsoccer](https://github.com/andrewRowlinson/mplsoccer) 에서 기본적인 전처리 및 데이터 로드 방식을 제공하니 훨씬 편하게 데이터를 끌어올 수 있다.
+감사하게도 [kloppy](https://github.com/PySport/kloppy) 및 [mplsoccer](https://github.com/andrewRowlinson/mplsoccer) 에서 기본적인 전처리 및 데이터 로드 기능을 제공하니 훨씬 편하게 데이터를 끌어올 수 있다.
 
 <br>
 
@@ -108,7 +110,7 @@ df.head()
 - 어시스트 패스 여부
 - 어시스트 패스 높이(땅볼, 낮게, 높게)
 
-마음같아선 **골키퍼 위치, 슈팅하는 선수의 순간 속도, 수비수 위치** 등 훨씬 더 많은 지표들을 추가하고 싶지만 statsbomb 데이터는 선수들의 좌표가 없는 Event 데이터라 세 지표로 간단한 xG 모형을 만들어 보았다.
+마음같아선 **골키퍼 위치, 슈팅하는 선수의 순간 속도, 수비수 위치** 등 훨씬 더 많은 지표들을 추가하고 싶지만 statsbomb 데이터는 선수들의 좌표가 없는 Event 데이터라 세 지표로 간단한 xG 모형을 만들어 보았다. (좌표가 있는 데이터도 있지만 특정 대회(월드켭, 유로)에만 제공)
 
 # 데이터 분포
 
@@ -295,7 +297,7 @@ plt.show()
 <br>
 
 
-따라서 이와 같은 *class imbalance* 상황에서는 모델이 얼마나 설명력을 가지는 가를 나타내는 지표로 정확도가 아닌, AUC 나 f1-score 등의 지표를 보통 활용한다. 여기서는 AUC(Area under curce)를 활용해서 모델의 설명력을 확인해보았다. AUC(Area Under Curve)는 binary class 를 구분하는 treshold 의 값이 변할때 TPR(True Positive Rate)와 FPR(False Positive Rate)의 값으로 그린 그래프의 아래 면적으로, class imbalance 비율에 관계없이 쉽게 모형이 얼마나 두 클래스의 분포를 잘 구분하고 있는 지를 나타내는 지표이다.
+따라서 이와 같은 *class imbalance* 상황에서는 모델이 얼마나 설명력을 가지는 가를 나타내는 지표로 정확도가 아닌, AUC 나 f1-score 등의 지표를 활용하여야 한다. 나는 [AUC(Area under curce)](https://en.wikipedia.org/wiki/Receiver_operating_characteristic)를 활용해서 모델의 설명력을 확인해보았다. AUC(Area Under Curve)는 binary class 를 구분하는 treshold 의 값이 변할때 TPR(True Positive Rate)와 FPR(False Positive Rate)의 값으로 그린 그래프의 아래 면적으로, class imbalance 비율에 관계없이 쉽게 모형이 얼마나 두 클래스의 분포를 잘 구분하고 있는 지를 나타내는 지표이다.
 
 ## AUC-ROC curve
 ```python
@@ -369,7 +371,7 @@ print(np.sum(lr.predict_proba(X)[::,1]))
 
 ### Statsbomb xG 와 비교
 
-Statsbomb 에서도 모든 슈팅에 대한 자체적인 xG 값을 제공하고 있다 [Statsbomb xG](https://statsbomb.com/soccer-metrics/expected-goals-xg-explained/). statsbomb xG(줄여서 s-xG 라고 하자)와 모델링을 통해서 구한 xG 값을 비교해보고 그 차이를 확인해보자.
+Statsbomb 에서도 모든 슈팅에 대한 자체적인 xG 값을 제공하고 있다 [Statsbomb xG](https://statsbomb.com/soccer-metrics/expected-goals-xg-explained/). statsbomb xG(줄여서 s-xG 라고 하자)와 모델링을 통해서 구한 xG 값을 비교해보고 그 차이를 확인해보았다.
 일단 제일 먼저, 그래프를 그려보았다.
 
 ```python
@@ -385,18 +387,42 @@ plt.ylabel('xG')
 </p>
 
 
-그래프로 보면 두 값이 분명히 차이가 나는 점들이많이 있는 것 같다. 하지만, 전체적으로 봤을 때, 특히 xG가 낮은 슈팅을 비슷하게 평가하는 것으로 보인다. (0.8 부근에 1자로 보이는 점들은 아마 페널티킥 일 듯.) 단순 궁금증 해결을 위해서 두 값의 차이가 가장 큰 10개 슈팅을 추려보았다.
+그래프로 보면 두 값이 분명히 차이가 나는 점들이 많이 있는 것 같다. (0.8 부근에 1자로 보이는 점들은 아마 페널티킥 일 듯.) 궁금증 해결을 위해서 두 값의 차이가 가장 큰 5개 슈팅을 추려보았다.
 
 <p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/0a6fd7f7-e1cc-4c6e-918d-3d27f7ac2211" width="500" height="500"/>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a6e1d3e0-cdbf-43de-aa74-eeaf181bb44b" width="500" height="500"/>
 </p>
 
-골대와 비슷한 거리 및 각도에 있다는 점 말고, 내가 구성한 학습데이터 셋으로는 다른 특이점을 찾기가 어렵다. (역시나..) 예상컨데 앞선 모델에서 수비수의 위치 및 골키퍼 위치 정보를 추가하지 않았으니, 수비수나 골키퍼 위치에 따른 차이라 본다. 
+| match_id | type_name | sub_type_name | player_name | team_name | body_part_name | outcome_name | x | y | shot_statsbomb_xg | xG_diff |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 3753979 | Shot | Open Play | Jermain Defoe | Sunderland | Left Foot | Goal | 105.6 | 35.7 | 0.983099 | 0.869473 |
+| 3900512 | Shot | Open Play | Souleymane Camara | Montpellier | Left Foot | Goal | 110.1 | 30.5 | 0.948656 | 0.833520 |
+| 3890269 | Shot | Open Play | Daniel Ginczek | VfB Stuttgart | Left Foot | Goal | 106.1 | 38.8 | 0.954949 | 0.826498 |
+| 3829464 | Shot | Open Play | Alassane Pléa | OGC Nice | Left Foot | Off T | 109.3 | 30.9 | 0.960538 | 0.812035 |
+| 3829413 | Shot | Open Play | Lucas Rodrigues Moura da Silva | Paris Saint-Germain | Right Foot | Goal | 109.2 | 49.4 | 0.964086 | 0.809019 |
 
 
+골대와 비슷한 거리 및 각도에 있다는 점 말고, 내가 구성한 학습데이터 셋으로는 다른 특이점을 찾기가 어렵다. (역시나..) 예상컨데 앞선 모델에서 수비수의 위치 및 골키퍼 위치 정보를 추가하지 않았으니, 수비수나 골키퍼 위치에 따른 차이라 본다. (아마 1대1 상황이나 골키퍼를 제친 상황이지 않을까?) 고민할 필요 없이 영상을 찾아봤다. 다행히 5개 슈팅 중에 4개를 유튜브에서 찾았다.
 
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/d84963c6-fd8c-4b6c-8995-09063ad5f8cd" align="center" width="40%">
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/01ce86d2-8d6d-4044-abaf-471fca93e8a3" align="center" width="40%">
+</p>
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/5829d73b-3e32-4e03-85f1-d5b040dc242b" align="center" width="40%">
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/5ec8f064-9571-4f7c-baeb-c289b6c9861a" align="center" width="40%">
+
+</p>
+
+네 슈팅 모두 골키퍼까지 제친 빈 골대를 향한 슈팅이었다. 역시 수비수와 골키퍼 위치정보 없이 학습된 xG 모형은 분명히 한계가 있다. 아쉽게도 해당 시즌(15/16) 경기들의 선수 위치 데이터는 statsbomb에서 제공해주지 않기 때문에, 수비수의 위치 및 골키퍼 위치 정보가 추가된 xG 모형 설계는 Event + EPTS(tracking) 데이터가 구해지면 다시 시도해 보아야겠다.
 
 # Wrap Up
+
+수준 높은 모델링은 아니지만, 축구경기 데이터 다루는 것은 항상 즐겁다. xG 지표가 나온 이후로 여러 지표가 함께 등장하면서 축구 분석들이 훨씬 풍부해진것 같다. 요즘에는 유럽 클럽중에 데이터 분석팀 없는 곳을 찾기 힘들 정도로 중요성이 커지고 있는 것 같다. 한가지 바램이 있다면 나와 같은 취미 분석가들도 잘 놀 수 있도록 데이터를 더 뿌려줬으면 한다.
+
+# Reference
+
+
 
 [logistic regression odd ratio](https://stats.oarc.ucla.edu/other/mult-pkg/faq/general/faq-how-do-i-interpret-odds-ratios-in-logistic-regression/) <br>
 [Github: metrica-sports](https://github.com/metrica-sports) <br>
