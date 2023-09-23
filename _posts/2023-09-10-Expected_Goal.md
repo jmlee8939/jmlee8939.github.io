@@ -45,11 +45,12 @@ $$y = f(X)$$
 여기서 $$y$$ 는 골이 될 확률 $$\mathbf{X} = [X_0,X_1,X_2, ...]$$ 는 다양한 슈팅이 발생하는 상황이다.
 여기서 골이 될 확률에 영향을 미치는 슈팅 상황 $$X_i$$ 에는 
 -	골대와의 거리
-- 골대와의 각도
+-   골대와의 각도
 -	골키퍼의 위치
 -	가까운 수비수의 위치
 -	헤딩 여부
 -	공을 차기 직전 공격수의 속도
+-   어시스트 여부
 <br>
 
 등이 있다.
@@ -146,11 +147,16 @@ for i in sample_idx:
 
 # Logistic regression
 
-Logistic regression 모형을 활용해서 xG model을 구현했다.
-Logistic regression은 가장 널리 사용되는 Classification model 중 하나이다. 이 모형에서 활용되는  logistic function 의 특성상 모형의 output 이 0~1 사이의 확률을 나타내는 값이 되고,
+Logistic regression은 가장 널리 사용되는 Classification model 중 하나이다. 아래는 Logistic regression 의 구조이다.
+
+$$ y = {e^{(\beta_0 + \beta_1x_1 + \beta_2x_2 + ...)}\over1+ e^{(\beta_0 + \beta_1x_1 + \beta_2x_2 + ...)}}$$
+
+여기서 $$y$$ 모델링 하고자 하는 종속변수이고, $$x$$는 슈팅 각도, 슈팅 거리 등 각각의 독립변수 이다. $$ \beta $$ 는 데이터를 통해서 학습되는 모형의 회귀 계수이다.  
+
+이 모형에서 활용되는  logistic function 의 특성상 모형의 output 이 0~1 사이의 확률을 나타내는 값이 되고,
 무엇보다 단순한 모형으로 내부 파라미터로 $$X$$ 들과 $$y$$의 상관관계 및 중요도 분석이 용이하다. 
 (비슷한 설명력을 가정했을 때, 모형이 단순할 수록 본질에 가까운 정보를 담고 있지 않나..)
-만약 슈팅 상황에 대한 풍부한(+ 복잡한) 정보가 갖추어져 있다면 더욱 복잡한 모형을 활용해도 좋을 것 같으나, Statsbomb 에서 제공하는 Event 데이터로는 Logistic regression 이 적당할 것 같다.  
+만약 슈팅 상황에 대한 풍부한(+ 복잡한) 정보가 갖추어져 있다면 더욱 복잡한 모형을 활용해도 좋을 것 같으나, Statsbomb 에서 제공하는 Event 데이터로는 Logistic regression 이면 충분해 보인다.  
 
 
 # 데이터 전처리
@@ -289,7 +295,7 @@ plt.show()
 <br>
 
 
-따라서 이와 같은 *class imbalance* 상황에서는 모델이 얼마나 설명력을 가지는 가를 나타내는 지표로 AUC(Area under curce)를 주로 활용한다. binary class 를 구분하는 treshold 의 값이 변할때 TPR(True Positive Rate)와 FPR(False Positive Rate)의 값으로 그린 그래프의 아래 면적으로, class imbalance 비율에 관계없이 쉽게 모형이 얼마나 두 클래스의 분포를 잘 구분하고 있는 지를 나타내는 지표이다.
+따라서 이와 같은 *class imbalance* 상황에서는 모델이 얼마나 설명력을 가지는 가를 나타내는 지표로 정확도가 아닌, AUC 나 f1-score 등의 지표를 보통 활용한다. 여기서는 AUC(Area under curce)를 활용해서 모델의 설명력을 확인해보았다. AUC(Area Under Curve)는 binary class 를 구분하는 treshold 의 값이 변할때 TPR(True Positive Rate)와 FPR(False Positive Rate)의 값으로 그린 그래프의 아래 면적으로, class imbalance 비율에 관계없이 쉽게 모형이 얼마나 두 클래스의 분포를 잘 구분하고 있는 지를 나타내는 지표이다.
 
 ## AUC-ROC curve
 ```python
@@ -312,20 +318,88 @@ plt.ylabel('TPR')
 
 AUC-ROC curve의 형태 및 AUC 값으로 보아 xG 모형이 골의 경향성을 잘 설명하고 있음을 확인할 수 있다. 하지만 이 모형이 정말 xG 모형으로 쓸만한 놈인가 좀 더 다각도로 확인해보고자 아래 3가지를 더 들여다보았다.
  
-> 1. 회기 계수를 통한 변수 중요도 Check. 
+> 1. 회귀 계수를 통한 변수 중요도 Check. 
 > 2. 총 기대득점(xG)의 합
-> 3. statsbomb 자체 xG 값과 비교
+> 3. statsbomb 자체 xG
+
+### 1. 회귀 계수와 변수 중요도 Check.
+
+학습된 Logistic regression 의 계수는 아래와 같다.
+```python
+coef_dict = pd.DataFrame(columns = dt.loc[:, dt.columns != 'success'].columns, data= lr.coef_).transpose()
+coef_dict
+```
+
+| X | Beta |
+|---:|---|
+| shot_distance | -9.779051 |
+| shot_angle | 5.213936 |
+| body_part_Head | -0.682454 |
+| body_part_Left Foot | 0.222211 |
+| body_part_Other | 0.122994 |
+| body_part_Right Foot | 0.319869 |
+| shot_type_Free Kick | 1.023703 |
+| shot_type_Penalty | 2.473718 |
+| pass_height_Ground Pass | 0.288567 |
+| pass_height_High Pass | -0.092236 |
+| pass_height_Low Pass | -0.091065 |
+| pass_type_Corner | -0.796904 |
+| pass_type_Free Kick | -0.208160 |
+
+우리가 학습한 아래의 logistic regression 모형에서
+$$ P_{goal} = {e^{(\beta_0 + \beta_1x_1 + \beta_2x_2 + ...)}\over1+ e^{(\beta_0 + \beta_1x_1 + \beta_2x_2 + ...)}}$$
+
+골이 발생할 확률 $$P_{goal}$$ 에 특정 $$x$$ 가 얼마나 영향을 미칠지 결정해 주는 값이 $$\beta$$ 이다. 특정 $$x_i$$ 의 유무에 따라서 결과가 바뀔 확률을 나타내는 값이 odd ratio 이고, logistic regression 에서는 이 값이 회기 계수 $$\exp(\beta_i)$$ 이다. 따라서 페널티킥의 경우 그렇지 않은 슈팅의 경우보다 골 확률이 10% 이상 상승한다. (다른 요소가 모두 같다고 가정했을 때) *logistic regression odd ratio의 자세한 내용은 여기 [참고](https://stats.oarc.ucla.edu/other/mult-pkg/faq/general/faq-how-do-i-interpret-odds-ratios-in-logistic-regression/). 
+<br>
+복잡하게 생각하지 않고 1차원적으로 선형 관계식에서 계수의 절대값이 클 수록 결과 값에 많은 큰 영향을 끼친다고 쉽게 이해해도 좋을 것 같다. 그런 관점에서 봤을 때, xG 값에 가장 영향을 크게 미치는 요소는 역시나 슛거리와 각도이다. 슛거리가 작아질수록, 골대와의 각도는 커질 수록 xG 값이 커진다. 또한 페널티킥, 프리킥의 경우 골 기대값이 더 높아진다. 수비수의 도전 없이, 충분히 준비한 상태에서 슈팅을 할 수 있다는 장점이, 벽을 세우는 수비수와 방어하는 골키퍼가 충분히 대비를 할 수 있다는 단점보다 강력하게 작용하는 것으로 보인다.  
+
+### 총 기대득점(xG)의 합
+
+이 모형을 통해서 얻고 싶은 값은 '기대 득점(xG)' 즉, 골이 들어갈 확률이다. 기대 득점의 분포가 적절하게 구성되어 있음을 확인하기 위해서 모든 슈팅의 기대득점의 합과 실제 들어간 골의 개수를 비교해 보았다. 물론 logistc regression 모델을 학습하는 과정에서 이 두 값이 최소화하도록 목적함수가 구성되기 때문에 (당연히...) 차이가 적어야 하지만, 좀 더 직관적으로 기대 득점의 분포를 이해할 수 있기에 확인해보았다. 
+
+
+```python
+print(np.sum(y))
+print(np.sum(lr.predict_proba(X)[::,1]))
+# 4716
+# 4741.6
+```
+
+실제 4716 골이 들어갔고, 모델을 통해 계산한 슈팅의 xG 값의 총합은 4741.6이다. 학습된 모델의 xG 값이 실제 골이 터질 확률을 잘 표현하고 있다고 볼 수 있다. 
+
+### Statsbomb xG 와 비교
+
+Statsbomb 에서도 모든 슈팅에 대한 자체적인 xG 값을 제공하고 있다 [Statsbomb xG](https://statsbomb.com/soccer-metrics/expected-goals-xg-explained/). statsbomb xG(줄여서 s-xG 라고 하자)와 모델링을 통해서 구한 xG 값을 비교해보고 그 차이를 확인해보자.
+일단 제일 먼저, 그래프를 그려보았다.
+
+```python
+plt.figure(figsize=(5,5 ))
+plt.scatter(df_shot['shot_statsbomb_xg'], lr.predict_proba(X)[::,1])
+plt.plot([-0.01, 1.01],[-0.01, 1.01], c='red')
+plt.xlabel('s-xG')
+plt.ylabel('xG')
+```
+
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/22fe6489-8f7a-4d9c-a74a-5f83d52a80b1" width="500" height="500"/>
+</p>
+
+
+그래프로 보면 두 값이 분명히 차이가 나는 점들이많이 있는 것 같다. 하지만, 전체적으로 봤을 때, 특히 xG가 낮은 슈팅을 비슷하게 평가하는 것으로 보인다. (0.8 부근에 1자로 보이는 점들은 아마 페널티킥 일 듯.) 단순 궁금증 해결을 위해서 두 값의 차이가 가장 큰 10개 슈팅을 추려보았다.
+
+<p align=center>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/0a6fd7f7-e1cc-4c6e-918d-3d27f7ac2211" width="500" height="500"/>
+</p>
+
+골대와 비슷한 거리 및 각도에 있다는 점 말고, 내가 구성한 학습데이터 셋으로는 다른 특이점을 찾기가 어렵다. (역시나..) 예상컨데 앞선 모델에서 수비수의 위치 및 골키퍼 위치 정보를 추가하지 않았으니, 수비수나 골키퍼 위치에 따른 차이라 본다. 
+
 
 
 
 # Wrap Up
 
-
+[logistic regression odd ratio](https://stats.oarc.ucla.edu/other/mult-pkg/faq/general/faq-how-do-i-interpret-odds-ratios-in-logistic-regression/) <br>
 [Github: metrica-sports](https://github.com/metrica-sports) <br>
 [Github: kloppy](https://github.com/PySport/kloppy)
 <br>
-[파이썬 축구 데이터 분석-김현성님](https://class101.net/ko/search?query=%EC%B6%95%EA%B5%AC)
-<br>
-[Metrica-pitch- control](https://github.com/anenglishgoat/Metrica-pitch-control)
-<br>
-[Wide Open Spaces: A statistical technique for measuring space creation in professional soccer](https://static.capabiliaserver.com/frontend/clients/barca/wp_prod/wp-content/uploads/2018/05/Wide-Open-Spaces.pdf)
+[파이썬 축구 데이터 분석](https://class101.net/ko/search?query=%EC%B6%95%EA%B5%AC)
