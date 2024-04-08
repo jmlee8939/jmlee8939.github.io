@@ -117,11 +117,14 @@ $$PC(p,t) = \sigma(\Sigma_i I(p,t)-\Sigma_j I(p,t))$$
 
 # 모델 구현
 
-위 모델들을 python 을 통해서 다음과 같이 구현해보았다. 
-
 ## 데이터 불러오기 
 
-우선 데이터는 [metrica-sports](https://github.com/metrica-sports), 또는 [kloppy](https://github.com/PySport/kloppy) 의 ETPS, event 데이터 셋을 사용한다. 가장 간단한 방법은 klopy package를 통해 불려오는 것이다.
+우선 데이터는 [metrica-sports](https://github.com/metrica-sports), 또는 [kloppy](https://github.com/PySport/kloppy) 의 ETPS, event 데이터 셋을 사용한다. 가장 간단한 방법은 klopy package를 통해 불러오는 것이다.
+
+
+<details>
+<summary> 데이터 불러오기 코드
+</summary>
 
 ```python
 from kloppy import metrica
@@ -136,6 +139,12 @@ dataset = metrica.load_open_data(
 
 dataset.to_df().head()
 ```
+</details>
+
+
+<details>
+<summary> 불러온 데이터 보기 
+</summary>
 
 | period_id | timestamp | frame_id | ball_state | ball_owning_team_id | ball_x |  ball_y |  ball_z | home_11_x | home_11_y |     ... | away_22_d | away_22_s | away_23_x | away_23_y | away_23_d | away_23_s | away_24_x | away_24_y | away_24_d | away_24_s |      |
 |----------:|----------:|---------:|-----------:|--------------------:|-------:|--------:|--------:|----------:|----------:|--------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|------|
@@ -145,26 +154,20 @@ dataset.to_df().head()
 |         3 |         1 |     0.12 |          4 |                None |   None | 0.55346 | 0.57769 |      None |   0.00121 | 0.51762 |       ... |      None |      None |   0.43644 |   0.94962 |      None |      None |   0.37756 |   0.72527 |      None | None |
 |         4 |         1 |     0.16 |          5 |                None |   None | 0.55512 | 0.59430 |      None |   0.00129 | 0.51762 |       ... |      None |      None |   0.43580 |   0.95023 |      None |      None |   0.37663 |   0.72457 |      None | None |
 
+</details>
 
+<br>
 
 ## 전처리
 
 사실 모델링보다 데이터 전처리가 훨씬 오래걸리는 일이지만... 안그래도 긴 글이 더 길어지니까 스킵! 프레임마다 제공되는 선수들의 위치 정보를 활용해서 프레임 마다의 속도를 계산하고 홈, 어웨이 팀 선수들을 보기 좋게 라벨링 했다. 그리고 이벤트 데이터까지 조인하여서 각 프레임마다 어떤 플레이가 일어났는지 어느 팀이 공을 소유하고 있는지가 함께 나타나는 데이터 셋을 구성했다.
-```py
-#... 전처리 끝난 Dataframe df
-df.head()
-```
-
-| Period | Frame | Time [s] | H11_x |   H11_y |     H1_x |     H1_y |     H2_x |     H2_y |     H3_x |      ... | A10_v_abs |  A12_x_v | A12_y_v | A12_v_abs | A13_x_v | A13_y_v | A13_v_abs | A14_x_v | A14_y_v | A14_v_abs |     |
-|-------:|------:|---------:|------:|--------:|---------:|---------:|---------:|---------:|---------:|---------:|----------:|---------:|--------:|----------:|--------:|--------:|----------:|--------:|--------:|----------:|-----|
-|      2 |     1 |        1 |  0.04 | 0.08528 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... |      NaN |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
-|      3 |     1 |        2 |  0.08 | 0.09984 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... | 2.910703 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
-|      4 |     1 |        3 |  0.12 | 0.11856 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... | 3.028292 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
-|      5 |     1 |        4 |  0.16 | 0.12584 | 32.80184 | 33.92688 | 44.41556 | 35.03448 | 33.31184 | 32.18176 |       ... | 3.144990 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
-|      6 |     1 |        5 |  0.20 | 0.13416 | 32.80184 | 33.90088 | 44.38292 | 35.01056 | 33.33224 | 32.18592 |       ... | 3.163107 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
-
 
 전처리가 끝난 데이터셋에서 특정 프레임(1000)에서의 선수의 위치, 속도, 공의 위치를 별도의 변수로 선언해둔다. (의식의 흐름대로 진행하다보니 코드가 깔끔하지 않으니 주의... 자세한 전처리 코드는 [Wide-Open-Space](https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model)에 정리해 두었음)
+
+
+<details>
+<summary> 전처리 코드
+</summary>
 
 ```python
 frame = 1000
@@ -179,10 +182,36 @@ players = np.array([positions.index[2*i].split('_')[0] for i in range(len(points
 ball_x, ball_y = df.loc[df['Frame'] == frame, ['Ball_x', 'Ball_y']].values[0]
 ball = np.array([ball_x, ball_y])
 ```
-## Pitch control model
->  Influence radius
+</details>
 
-논문에서 정의한 Influence radius 먼저 정의해두고..
+<details>
+<summary> 전처리 후 최종 데이터
+</summary>
+
+```py
+#... 전처리 끝난 Dataframe df
+df.head()
+```
+
+| Period | Frame | Time [s] | H11_x |   H11_y |     H1_x |     H1_y |     H2_x |     H2_y |     H3_x |      ... | A10_v_abs |  A12_x_v | A12_y_v | A12_v_abs | A13_x_v | A13_y_v | A13_v_abs | A14_x_v | A14_y_v | A14_v_abs |     |
+|-------:|------:|---------:|------:|--------:|---------:|---------:|---------:|---------:|---------:|---------:|----------:|---------:|--------:|----------:|--------:|--------:|----------:|--------:|--------:|----------:|-----|
+|      2 |     1 |        1 |  0.04 | 0.08528 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... |      NaN |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+|      3 |     1 |        2 |  0.08 | 0.09984 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... | 2.910703 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+|      4 |     1 |        3 |  0.12 | 0.11856 | 32.80184 | 33.95392 | 44.41896 | 35.04904 | 33.22684 | 32.16408 |       ... | 3.028292 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+|      5 |     1 |        4 |  0.16 | 0.12584 | 32.80184 | 33.92688 | 44.41556 | 35.03448 | 33.31184 | 32.18176 |       ... | 3.144990 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+|      6 |     1 |        5 |  0.20 | 0.13416 | 32.80184 | 33.90088 | 44.38292 | 35.01056 | 33.33224 | 32.18592 |       ... | 3.163107 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
+
+</details>
+
+<br>
+
+## Pitch control model
+
+논문에서 정의한 Influence radius 와 Influence function 을 구성한다.
+<details>
+<summary> Influence radius, Influence function 코드
+</summary>
+
 
 ```py
 def influence_radius(ball, position):
@@ -190,10 +219,6 @@ def influence_radius(ball, position):
     output = np.minimum(3/200*(distance)**2 + 4, 10)
     return output
 ```
-
-> Influence function
-
-Influence function 을 구현한다.
 
 ```py
 def influence_function(position, locations, velocity, ball):
@@ -210,7 +235,12 @@ def influence_function(position, locations, velocity, ball):
     out /= new_gaussian.pdf(position)
     return out
 ```
+</details>
+
 이를 시각화 하면,
+<details>
+<summary> 시각화 코드
+</summary>
 
 ```py
 x, y = np.mgrid[0:104:0.1, 0:68:0.1]
@@ -238,13 +268,14 @@ for t, p, v in zip(players, points, velocities):
 ax.scatter(ball_x, ball_y, color='black')
 ```
 
+</details>
+
 ![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/086475a8-01db-43ac-abb9-37b898b26e3b)
 
-그럴싸한 pitch control 모델이 완성되었다! 
 
 
 # Wrap up 
-논문 읽으면서 이렇게 신났던적이 있었던가 싶다. 역시 바르셀로나가 축구를 괜히 잘하는 게 아니구나... 이정도로 디테일한 모델링과 분석을 하니까 잘할 수 밖에. 이제 논문 내용의 반 정도 왔다. 아직 갈길이 좀 남았다. 다음 글은 이 Pitch control 모형을 활용해서 선수들의 움직임을 평가하는 지표를 만드는 과정을 설명하고자한다. 글을 쓰다보니까 생각보다 너무 시간이 많이 들었다. 이렇게 진지모드로 글을 쓰려고 했던 것은 아닌데 말이지. 정리하다보면 점점 요령이 생겨나리라 믿는다.
+ 역시 바르셀로나가 축구를 괜히 잘하는 게 아니구나... 이정도로 디테일한 모델링과 분석을 하니까 잘할 수 밖에. 생각보다 너무 시간이 많이 들었다. 이렇게 진지모드로 글을 쓰려고 했던 것은 아닌데 말이지. 정리하다 보면 점점 요령이 쌓이겠지.
 
 # References
 [metrica-sports](https://github.com/metrica-sports) <br>

@@ -61,10 +61,12 @@ pip  install selenium
     - chrome version 확인 : 크롬 브라우저 검색창에 *chrome://version* 입력해서 확인가능<br>
     
    1. 현재 Chrome browser 버전을 확인하고,<br>
-   <img src='http://drive.google.com/uc?export=view&id=1nr-WMqLZfxYh-TRcyJ2oleGbnVQEX-Yc' /><br>
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/8909054a-5b9a-43a1-96fb-00f778096424)
+<br>
    <br>
    2. 버전에 맞는 ChromeDriver를 설치한다. <br>
-   <img src='http://drive.google.com/uc?export=view&id=1SqI63bmicsFOWkF4VIWEM2koiAlxbcQy' /><br>
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/44713462-8844-4017-9311-7cd2957014f2)
+ <br>
    3. ChromeDriver 가 설치된 디렉토리를 확인한다.
 
 
@@ -76,15 +78,21 @@ pip  install selenium
 본 포스팅에서는 2021시즌 Premier League table 을 Crawling 하는 방법을 간단히 소개하고자 한다.<br>
 내가 처음으로 Crawling 하고자 한 정보는 바로 이 [2021 League Table](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League)
  이다.
-<p align="center">
-<img src='http://drive.google.com/uc?export=view&id=11DFElgxvXdzAEA4iVvnh_8DNonhP3Q7f' width=700/><br>
-</p>
+
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a8f8f3b8-d400-485f-ac58-1d2c812a089b)
+
 위 League table은 2021 시즌의 순위와 각 팀의 경기 결과들을 한눈에 볼 수 있는 표로 참고할 만한 여러 정보를 담고있다.
 머신러닝 및 데이터 분석에 활용할 수 있도록 python 이나 R 환경으로 세부 정보들을 옮겨보고자 한다.
 
 # Crawling process
 ### 1. webdriver 연결 확인
 python 환경에서 로컬에 저장된 Chromedriver 를 연결해서 브라우저 제어 가능한지 확인하는 코드는 다음과 같다.
+
+
+<details>
+<summary> Chromedriver 연결 코드
+</summary>
+
 ```python
 # 디렉토리에 저장된 chromedriver 에 연결
 driver = webdriver.Chrome('./chromedriver')
@@ -95,20 +103,19 @@ time.sleep(3)
 # 웹 브라우저 닫기 
 driver.close()
 ```
+</details>
+
 chromedriver 가 잘 연결되었다면, 위 코드를 실행했을 때 Whoscored.com 사이트가 열렸다가 3초 후 브라우저가 종료될 것이다. 
 ### 2. 웹 상의 소스코드 구조 확인
 웹페이지의 소스코드는 F12를 누르면 확인할 수 있고,
 *Control + Shift + C* 를 활용하면 마우스 커서에 해당하는 Element 의 소스 코드를 쉽게 찾을 수 있다.
 
-<p align="center">
-<img src='http://drive.google.com/uc?export=view&id=1OOUVinJkEI8cmEu9yasfTkaqs5iq-BO1' width=700/>
-</p>
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/0dc6e172-2e9c-4e6e-889e-0428e6ac2c38)
 
 이를 통해서 Crawling 하고자 하는 Element 의 소스 코드 구조를 확인할 수 있다.     
 
-<p align="center">
-<img src='http://drive.google.com/uc?export=view&id=1dmwY_SHZkj0TgV4IeSOdIYJ92rpBfyIh' width=700/>
-</p>
+![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/897b366c-3785-4768-bb0f-d159b4a9963c)
+
 
 ### 3. CSS selector
 CSS selector 는 웹상에 존재하는 모든 요소들을 선택하게 해 주는 네비게이션 역할을 한다.
@@ -138,12 +145,64 @@ Selenium 에서는 아래와 같은 함수들를 통해 element 에 접근한다
 | find_elements_by_class_name   	| 클래스를 사용하여 접근     	|
 | find_elements_by_css_selector 	| CSS 선택자를 사용하여 접근 	|
 
-# Crawling code
+# Python Code
 내가 Crawling 하고자 하는 table 의 class 는 "standings" 이고 
 다수의 하위 요소 "td" 에 팀이름, 승, 무, 패, 승점 등의 정보가 담겨 있다.
 위 함수들을 를 활용하여 class 이름으로 table 에 접근하고, 다수의 "td" 에 해당하는 정보들을 차례로 불러오고자 한다.
 
 *Crawler* 를 구성한 코드는 다음과 같다.
+
+<details>
+<summary> Crawler code
+</summary>
+
+```python
+import time
+import pandas as pd
+from selenium import webdriver
+
+def league_table_crawler(URL, api_delay_term=3):
+    """
+    cwaling league table(seasonal statistics) 
+    Args : 
+        URL : league table URL 
+    Output :
+        leauge table(dataframe)
+    """
+    url = str(URL)
+    driver = webdriver.Chrome('./chromedriver')
+    driver.get(url)
+    
+    time.sleep(api_delay_term)
+    
+    league_table_df = pd.DataFrame(columns=[
+        "team_number", "team_name", "P", "W", "D", "L", "GF", "GA", "GD", "Pts"])
+    
+    elements = driver.find_elements_by_class_name("standings")[0]
+    elements = elements.find_elements_by_css_selector("tr")
+    
+    for element in elements:
+        league_table_dict = { 
+            "team_number": element.find_elements_by_css_selector("a")[0].get_attribute("href").split("/")[4], 
+            "team_name": element.find_elements_by_css_selector("a")[0].text,     
+            "P": element.find_elements_by_css_selector("td")[1].text,
+            "W": element.find_elements_by_css_selector("td")[2].text, 
+            "D": element.find_elements_by_css_selector("td")[3].text,
+            "L": element.find_elements_by_css_selector("td")[4].text, 
+            "GF": element.find_elements_by_css_selector("td")[5].text, 
+            "GA": element.find_elements_by_css_selector("td")[6].text,
+            "GD": element.find_elements_by_css_selector("td")[7].text,
+            "Pts": element.find_elements_by_css_selector("td")[8].text,
+        }
+        league_table_df.loc[len(league_table_df)] = league_table_dict
+    # close webdriver
+    driver.close()
+    
+    return league_table_df
+```
+
+</details>
+
 
 ```python
 import time
