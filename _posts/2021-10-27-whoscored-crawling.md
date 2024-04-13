@@ -155,6 +155,7 @@ Selenium 에서는 아래와 같은 함수들를 통해 element 에 접근한다
 <details>
 <summary> Crawler code
 </summary>
+<div markdown="1">
 
 ```python
 import time
@@ -201,53 +202,10 @@ def league_table_crawler(URL, api_delay_term=3):
     return league_table_df
 ```
 
+</div>
 </details>
+<br>
 
-
-```python
-import time
-import pandas as pd
-from selenium import webdriver
-
-def league_table_crawler(URL, api_delay_term=3):
-    """
-    cwaling league table(seasonal statistics) 
-    Args : 
-        URL : league table URL 
-    Output :
-        leauge table(dataframe)
-    """
-    url = str(URL)
-    driver = webdriver.Chrome('./chromedriver')
-    driver.get(url)
-    
-    time.sleep(api_delay_term)
-    
-    league_table_df = pd.DataFrame(columns=[
-        "team_number", "team_name", "P", "W", "D", "L", "GF", "GA", "GD", "Pts"])
-    
-    elements = driver.find_elements_by_class_name("standings")[0]
-    elements = elements.find_elements_by_css_selector("tr")
-    
-    for element in elements:
-        league_table_dict = { 
-            "team_number": element.find_elements_by_css_selector("a")[0].get_attribute("href").split("/")[4], 
-            "team_name": element.find_elements_by_css_selector("a")[0].text,     
-            "P": element.find_elements_by_css_selector("td")[1].text,
-            "W": element.find_elements_by_css_selector("td")[2].text, 
-            "D": element.find_elements_by_css_selector("td")[3].text,
-            "L": element.find_elements_by_css_selector("td")[4].text, 
-            "GF": element.find_elements_by_css_selector("td")[5].text, 
-            "GA": element.find_elements_by_css_selector("td")[6].text,
-            "GD": element.find_elements_by_css_selector("td")[7].text,
-            "Pts": element.find_elements_by_css_selector("td")[8].text,
-        }
-        league_table_df.loc[len(league_table_df)] = league_table_dict
-    # close webdriver
-    driver.close()
-    
-    return league_table_df
-```
 그 다음 Premier League 2021 시즌의 League table 의 [URL](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League)
 과 *Crawler* 를 연결시키고 Crawling 을 진행한다.<br>
 ```python

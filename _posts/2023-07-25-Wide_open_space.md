@@ -13,7 +13,7 @@ tags:
 # Preface
 ### *"Long time no see"* <br>
 
-참 오랜만에 글을 써 본다. 머릿속에 데이터 및 축구에 대한 아이디어는 자꾸 떠오르는데 현실적으로 구현해볼 여유가 없는 것 같다. 억지로라도 꾸역꾸역 풀어놓아야겠다. 최근에 다시 축구 분야 연구들에 관심에 불이 붙어서 여기 저기 기웃하였다. 그 중에 CLASS 101에서 김현성님의 \<파이썬 축구 데이터 분석\> 강의를 우연히 들었는 데 정말 흥미로웠다. (대학원 졸업 이후에 핏투게더 지원을 진지하게 고민했었는 데, 해볼껄 그랬다.) 데이터 분석가 or 사이언티스트는 축구데이터를 어떻게 다루는지 궁금한 사람은 한 번 들어보는 것을 추천한다.
+들여다보고 싶은 축구 데이터 분석 주제는 자꾸 떠오르는데 현실적으로 구현해볼 여유가 없다. 억지로 시간내어 꾸역꾸역 풀어놓아야겠다. 최근에 다시 축구 분야 연구들에 관심에 불이 붙어서 여기 저기 기웃하였다. 그 중에 CLASS 101에서 김현성님의 \<파이썬 축구 데이터 분석\> 강의를 우연히 들었는 데 정말 흥미로웠다. (대학원 졸업 이후에 핏투게더 지원을 진지하게 고민했었는 데, 해볼껄 그랬다.) 데이터 분석가 or 사이언티스트는 축구데이터를 어떻게 다루는지 궁금한 사람은 한 번 들어보는 것을 추천한다.
 
 # Intro 
 이번 포스팅의 주제는 **"축구경기에서 공간을 지표화"** 이다.
@@ -123,8 +123,8 @@ $$PC(p,t) = \sigma(\Sigma_i I(p,t)-\Sigma_j I(p,t))$$
 
 
 <details>
-<summary> 데이터 불러오기 코드
-</summary>
+<summary> 데이터 불러오기 코드 </summary>
+<div markdown="1">
 
 ```python
 from kloppy import metrica
@@ -139,12 +139,15 @@ dataset = metrica.load_open_data(
 
 dataset.to_df().head()
 ```
+
+</div>
 </details>
 
 
 <details>
 <summary> 불러온 데이터 보기 
 </summary>
+<div markdown="1">
 
 | period_id | timestamp | frame_id | ball_state | ball_owning_team_id | ball_x |  ball_y |  ball_z | home_11_x | home_11_y |     ... | away_22_d | away_22_s | away_23_x | away_23_y | away_23_d | away_23_s | away_24_x | away_24_y | away_24_d | away_24_s |      |
 |----------:|----------:|---------:|-----------:|--------------------:|-------:|--------:|--------:|----------:|----------:|--------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|----------:|------|
@@ -152,8 +155,9 @@ dataset.to_df().head()
 |         1 |         1 |     0.04 |          2 |                None |   None | 0.49645 | 0.59344 |      None |   0.00096 | 0.51762 |       ... |      None |      None |   0.43693 |   0.94998 |      None |      None |   0.37833 |   0.72617 |      None | None |
 |         2 |         1 |     0.08 |          3 |                None |   None | 0.53716 | 0.57444 |      None |   0.00114 | 0.51762 |       ... |      None |      None |   0.43693 |   0.94998 |      None |      None |   0.37833 |   0.72617 |      None | None |
 |         3 |         1 |     0.12 |          4 |                None |   None | 0.55346 | 0.57769 |      None |   0.00121 | 0.51762 |       ... |      None |      None |   0.43644 |   0.94962 |      None |      None |   0.37756 |   0.72527 |      None | None |
-|         4 |         1 |     0.16 |          5 |                None |   None | 0.55512 | 0.59430 |      None |   0.00129 | 0.51762 |       ... |      None |      None |   0.43580 |   0.95023 |      None |      None |   0.37663 |   0.72457 |      None | None |
+|         4 |         1 |     0.16 |          5 |                None |   None | 0.55512 | 0.59430 |      None |   0.00129 | 0.51762 |       ... |      None |      None |   0.43580 |   0.95023 |      None |      None |   0.37663 |   0.72457 |      None | None |ß
 
+</div>
 </details>
 
 <br>
@@ -166,8 +170,8 @@ dataset.to_df().head()
 
 
 <details>
-<summary> 전처리 코드
-</summary>
+<summary> 전처리 코드 </summary>
+<div markdown="1">
 
 ```python
 frame = 1000
@@ -182,11 +186,13 @@ players = np.array([positions.index[2*i].split('_')[0] for i in range(len(points
 ball_x, ball_y = df.loc[df['Frame'] == frame, ['Ball_x', 'Ball_y']].values[0]
 ball = np.array([ball_x, ball_y])
 ```
+
+</div>
 </details>
 
 <details>
-<summary> 전처리 후 최종 데이터
-</summary>
+<summary> 전처리 후 최종 데이터 </summary>
+<div markdown="1">
 
 ```py
 #... 전처리 끝난 Dataframe df
@@ -201,6 +207,7 @@ df.head()
 |      5 |     1 |        4 |  0.16 | 0.12584 | 32.80184 | 33.92688 | 44.41556 | 35.03448 | 33.31184 | 32.18176 |       ... | 3.144990 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
 |      6 |     1 |        5 |  0.20 | 0.13416 | 32.80184 | 33.90088 | 44.38292 | 35.01056 | 33.33224 | 32.18592 |       ... | 3.163107 |     NaN |       NaN |     NaN |     NaN |       NaN |     NaN |     NaN |       NaN | NaN |
 
+</div>
 </details>
 
 <br>
@@ -209,9 +216,8 @@ df.head()
 
 논문에서 정의한 Influence radius 와 Influence function 을 구성한다.
 <details>
-<summary> Influence radius, Influence function 코드
-</summary>
-
+<summary> Influence radius, Influence function 코드 </summary>
+<div markdown="1">
 
 ```py
 def influence_radius(ball, position):
@@ -235,12 +241,14 @@ def influence_function(position, locations, velocity, ball):
     out /= new_gaussian.pdf(position)
     return out
 ```
+
+</div>
 </details>
 
 이를 시각화 하면,
 <details>
-<summary> 시각화 코드
-</summary>
+<summary> 시각화 코드 </summary>
+<div markdown="1">
 
 ```py
 x, y = np.mgrid[0:104:0.1, 0:68:0.1]
@@ -268,6 +276,7 @@ for t, p, v in zip(players, points, velocities):
 ax.scatter(ball_x, ball_y, color='black')
 ```
 
+</div>
 </details>
 
 ![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/086475a8-01db-43ac-abb9-37b898b26e3b)
