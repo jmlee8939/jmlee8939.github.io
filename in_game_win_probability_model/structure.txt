@@ -1,0 +1,4 @@
+
+주제 : in-game win probability model (with k league Data) 
+
+1000 + 999 + 998 + ... + 1
