@@ -72,6 +72,21 @@ K리그 축구경기의 골 모델의 파라미터 설계에 활용될 변수를
 - (누적) 퇴장
 - (누적) 경고
 
+## Bayesian Poisson Model
+
+다음과 같이 홈, 어웨이 팀의 골을 포아송 모형으로 설계합니다.
+특정 시점 $t$에서 경기 결과 시점의 각 팀의 골은 현재 시점의 골에 남은 시간에 발생할 골의 수의 합으로 나타낼 수 있습니다.
+
+$$Goal_{home, end} \sim Pois((T-t)* \theta_{home, t}) + Goal_{home, t} $$
+$$Goal_{away, end} \sim Pois((T-t)* \theta_{away, t}) + Goal_{away, t} $$
+
+각각의 포아송 분포 파라미터 $\theta$ 는 아래와 같이 설계합니다. 특정 시점 $t$에서 경기 상황 변수 Feature 들($x_t$)에다 가중치를 곱하고,
+홈 팀에겐 $Ha$ 상수를 추가하여 홈 어드벤티지가 있도록 하였습니다. 
+
+$$\theta_{home,t} = \exp(\vec{w_t}*x_t+w_0+Ha)$$
+$$\theta_{away,t} = \exp(\vec{w_t}*x_t+w_0)$$
+
+초기값과 시간에 따른 $\vec{w_t}$
 
 <br>
 
