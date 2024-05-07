@@ -86,7 +86,7 @@ $$Goal_{away, end} \sim Pois((T-t)* \theta_{away, t}) + Goal_{away, t} $$
 $$\theta_{home,t} = \exp(\vec{w_t}*x_t+w_0+Ha)$$
 $$\theta_{away,t} = \exp(\vec{w_t}*x_t+w_0)$$
 
-초기값과 시간에 따른 $\vec{w_t}$
+초기값과 시간에 따른 $\vec{w_t}$ 
 
 <br>
 
