@@ -1,2 +1,16 @@
 source "https://rubygems.org"
-gemspec
+gem 'jekyll-include-cache', '~> 0.1'
+gem 'csv'
+gem 'base64'
+gem 'bigdecimal'
+gem 'jekyll-paginate' 
+gem 'jekyll-sitemap'
+gem 'jekyll-gist'
+gem 'jekyll-feed'
+gem 'jekyll-coffeescript'
+gem 'jekyll-default-layout'
+gem 'faraday-retry'
+gem 'jekyll-github-metadata'
+gem 'jekyll-optional-front-matter'
+gem 'jekyll-readme-index'
+gem 'minimal-mistakes-jekyll'
