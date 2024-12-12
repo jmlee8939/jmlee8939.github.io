@@ -61,12 +61,7 @@ pip  install selenium
     - chrome version 확인 : 크롬 브라우저 검색창에 *chrome://version* 입력해서 확인가능<br>
     
    1. 현재 Chrome browser 버전을 확인하고,<br>
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/8909054a-5b9a-43a1-96fb-00f778096424)
-<br>
-   <br>
    2. 버전에 맞는 ChromeDriver를 설치한다. <br>
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/44713462-8844-4017-9311-7cd2957014f2)
- <br>
    3. ChromeDriver 가 설치된 디렉토리를 확인한다.
 
 
@@ -79,7 +74,9 @@ pip  install selenium
 내가 처음으로 Crawling 하고자 한 정보는 바로 이 [2021 League Table](https://1xbet.whoscored.com/Regions/252/Tournaments/2/Seasons/8228/England-Premier-League)
  이다.
 
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a8f8f3b8-d400-485f-ac58-1d2c812a089b)
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Whoscored/PL2122 League Table.png?raw=true" width = 500 height = 300>
+</p>
 
 위 League table은 2021 시즌의 순위와 각 팀의 경기 결과들을 한눈에 볼 수 있는 표로 참고할 만한 여러 정보를 담고있다.
 머신러닝 및 데이터 분석에 활용할 수 있도록 python 이나 R 환경으로 세부 정보들을 옮겨보고자 한다.
@@ -87,11 +84,6 @@ pip  install selenium
 # Crawling process
 ### 1. webdriver 연결 확인
 python 환경에서 로컬에 저장된 Chromedriver 를 연결해서 브라우저 제어 가능한지 확인하는 코드는 다음과 같다.
-
-
-<details>
-<summary> Chromedriver 연결 코드
-</summary>
 
 ```python
 # 디렉토리에 저장된 chromedriver 에 연결
@@ -103,19 +95,17 @@ time.sleep(3)
 # 웹 브라우저 닫기 
 driver.close()
 ```
-</details>
 
 chromedriver 가 잘 연결되었다면, 위 코드를 실행했을 때 Whoscored.com 사이트가 열렸다가 3초 후 브라우저가 종료될 것이다. 
 ### 2. 웹 상의 소스코드 구조 확인
 웹페이지의 소스코드는 F12를 누르면 확인할 수 있고,
 *Control + Shift + C* 를 활용하면 마우스 커서에 해당하는 Element 의 소스 코드를 쉽게 찾을 수 있다.
-
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/0dc6e172-2e9c-4e6e-889e-0428e6ac2c38)
-
+<br>
 이를 통해서 Crawling 하고자 하는 Element 의 소스 코드 구조를 확인할 수 있다.     
 
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/897b366c-3785-4768-bb0f-d159b4a9963c)
-
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Whoscored/Web sourcecode.png?raw=true" width = 500 height = 300>
+</p>
 
 ### 3. CSS selector
 CSS selector 는 웹상에 존재하는 모든 요소들을 선택하게 해 주는 네비게이션 역할을 한다.
