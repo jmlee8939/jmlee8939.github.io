@@ -6,7 +6,7 @@ main:
     url: /about/
   - title: "Posts"
     url: /year-archive/
-   - title: "Books"
+  - title: "Books"
     url: /collection-archive/
   # - title: "Sitemap"
   #   url: /sitemap/
