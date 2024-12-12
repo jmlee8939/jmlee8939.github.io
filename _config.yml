@@ -105,7 +105,7 @@ social:
 
 # Analytics
 analytics:
-  provider               : "google" # false (default), "google", "google-universal", "google-gtag", "custom"
+  provider               : "google-gtag" # false (default), "google", "google-universal", "google-gtag", "custom"
   google:
     tracking_id          :
     anonymize_ip         : # true, false (default)
@@ -308,8 +308,7 @@ compress_html:
   clippings: all
   ignore:
     envs: development
-
-
+    
 # Defaults
 defaults:
   # _posts
@@ -319,10 +318,13 @@ defaults:
     values:
       layout: single
       author_profile: true
-      read_time: true
-      comments: # true
+      read_time: # true
+      comments: true
       share: true
       related: true
+      sidebar:
+        nav: "categories"
+
   # _pages
   - scope:
       path: "_pages"

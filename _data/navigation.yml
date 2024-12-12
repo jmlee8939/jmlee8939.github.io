@@ -5,8 +5,10 @@ main:
   - title: "About"
     url: /about/
   - title: "Posts"
-    url: /year-archive/
+    url: /categories/Posts/
   - title: "Books"
-    url: /collection-archive/
+    url: /categories/Books/
+  - title: "Football"
+    url: /categories/Football/
   # - title: "Sitemap"
   #   url: /sitemap/

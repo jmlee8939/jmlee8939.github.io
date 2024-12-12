@@ -1,8 +1,10 @@
 ---
-title: "[DP20] 축구경기에서 공간창출을 지표화 한다면? - 2"
-excerpt: "Wide Open Spaces:A statistical technique for measuring space creation in professional soccer 논문 리뷰 및 구현하기"
+title: "축구경기에서 공간창출을 지표화 한다면? - 2"
+excerpt: "Pitch Control 기반 공간 창출 능력 높은 선수 찾기"
+categories: "Football"
+permalink: "/Football/wide-open-space-2/"
 header: 
-    teaser: "https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/086475a8-01db-43ac-abb9-37b898b26e3b"
+    teaser: "https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/6c737076-1838-42d0-b611-19a6e15ab73a"
 tags:
   - 축구 모델링
   - 축구 데이터

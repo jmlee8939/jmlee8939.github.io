@@ -1,6 +1,8 @@
 ---
-title: "[DP20] 축구 데이터 크롤링하기"
+title: "축구 데이터 크롤링하기"
 excerpt: "Chrome webdriver 로 축구 경기 웹사이트(Whoscored.com)에서 경기 DATA 크롤링 하기"
+categories: "Football"
+permalink: "/Football/Whoscored-crawling/"
 header:
   teaser: "http://drive.google.com/uc?export=view&id=1-atf2hBTNCbA7c3MoSaFDiqI0EqWGzzp"
 tags: 

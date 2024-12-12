@@ -1,8 +1,10 @@
 ---
-title: "[DP20] 손흥민 선수는 PL에서 얼마나 잘하고 있는 걸까?"
+title: "손흥민 선수는 PL에서 얼마나 잘하고 있는 걸까?"
 excerpt: "프리미어리그 선수 데이터 visualization 및 간단한 ranking system 으로 알아보는 손흥민 선수."
+categories: "Football"
+permalink: "/Football/sony_pl/"
 header:
-  teaser: "http://drive.google.com/uc?export=view&id=101GxI2lkiHurZgTcpRNqohdEUgwp-Dim"
+  teaser: "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/sony_visualization/puskas son.png?raw=true"
 tags: 
   - Soccer
   - Premier League
