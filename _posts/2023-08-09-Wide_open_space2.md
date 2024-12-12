@@ -52,6 +52,7 @@ $$\hat{V}_l(t) = \begin{cases} 1,& D_l(t)>1 \\ D_l(t), & otherwise \end{cases}$$
 
 실제 학습에 사용되는 $$\hat{V}_l(t)$$ 를 시각화 하면 다음과 같다.
 검은 점은 특정 시점의 공의 위치이고 붉게 표현된 부분이 수비팀의 pitch control 값이다. (논문에서는 pitch 위의 모든 점들을 학습 set 으로 활용하지는 않고 가로, 세로를 각각 21, 15등분 하여 한 시점당 315 개의 학습 데이터셋이 구성되도록 했다.)
+
 <p align=center>
 <img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/edae0b1f-d53f-4ab5-8c90-f0b73bd7ac03" width="300" height="200"/>
 </p>
@@ -69,15 +70,16 @@ $$\mathcal{L}(\theta) = \arg_\theta\min {1 \over n} \sum^n_{e=1}(\hat{y} - y)^2$
 학습된 Space Quailty model은 공의 위치에 따라 다른 공간 중요도를 나타낸다. 이를 시각화 하면 아래와 같다. 공에서 가까운 공격방향의 공간 중요도가 크게 나타난다. 공격자 입장에서 쉽게 공을 전달하여 공격을 전개할 수 있는 공간들이기 때문이다.
 
 
-<p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/5a9001a4-ffc1-4e85-b9bd-407736b67842" width="500" height="300"/>
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/Pitch_importance_weight.png?raw=true" width = 500 height = 300>
 </p>
 
 저자는 여기서 *아이디어 3. 상대방의 골대와 가까워질수록 중요도가 높아진다.* 를 모델에 반영하기 위해서 아래 그림 (a) 와 같이 상대방 골대로 가까워질수록 공간의 중요도에 가중치를 부여한다. 나머지 그림은 가중치가 부여된 공간 중요도이다.
 
-<p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a949ca88-53c4-4681-9b33-20e9fa006421" width="500" height="300"/>
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/Pitch_importance_example.png?raw=true" width = 500 height = 300>
 </p>
+
 
 ## Quality of owned space $$Q$$
 
@@ -99,9 +101,8 @@ $$SOG_i(t) = \begin{cases} G_i(t) & if \space G_i(t)  \ge \epsilon \\ 0 & otherw
 
  여기서 $$\epsilon$$ 는 연속적인 Space Occupation Gain 를 Discrete 한 값으로 변환 시켜주는 역할을 한다. 아래 왼쪽 그림에서는 H4, H6, H12 선수가 수비수의 방해가 없는 넓은 공간을 찾아서 나오는 장면이다. 상대방의 견제를 멀리 하면서 공격 작업을 쉽게 할 수 있는 좋은 공간으로의 움직임이다. 오른쪽 그림에서는 H8, H9 두 공격수가 상대 수비수와 미드필더 사이의 빈 공간으로 파고들면서 더 좋은 공간을 점유하기 위해 움직이면서 $$\epsilon$$ 보다 높은 SOG 값을 창출하고 있다.
 
-<p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/f7762aa2-6053-4bd3-880c-5e1ca4716664" align="center" width="40%">
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/34baa5cc-4d49-4f07-9dc0-73f05957895f" align="center" width="40%"/>
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/SOG_example1.png?raw=true" width = 500 height = 300>
 </p>
 
 한 경기에서 각 선수가 발생시킨 SOG의 횟수, 평균 등을 보면 각 선수의 움직임이 얼마나 효과적이었는가를 나타낼 수 있다. 
@@ -116,9 +117,8 @@ $$SOG_i(t) = \begin{cases} G_i(t) & if \space G_i(t)  \ge \epsilon \\ 0 & otherw
 
 아래는 실제로 모델링을 통해 얻은 결과로 공격수 A10 가 파고드는 움직임을 통해 수비수 H2를 끌어당기고 측면공격수 A7 에게 공간을 만들어주는 Space Generation이 발생하는 장면이다. (그래도 H1이 빠르게 열린 공간을 커버해주고 있다.) 
 <p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/a9b183b9-dfc9-4286-b8ea-a040300dc84b" align="center" width="30%">
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/6d1113a5-f294-4e29-bcca-06a8cfc0154a" align="center" width="30%"/>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/e517052a-9b3c-4473-b7eb-7f0f856c3fd8" align="center" width="30%"/>
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/SGG_example1.png?raw=true" align="center" width="40%">
+<img src="https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/SGG_example2.png?raw=true" align="center" width="40%"/>
 </p>
 
 직접 구현한 모델들을 바탕으로 Metrica sports가 제공하는 Sample Game1 의 선수들의 SOG, SGG를 정리하면 다음과 같다. 
@@ -363,8 +363,8 @@ Train loss와 Test loss가 epoch에 따라서 비슷하게 줄어들고 있다. 
 
 x축은 Target space quality 값 $$V_l(t)$$ 이고, y축은 예측 space quality 값 $$\hat{V}_l(t)$$ 이다. 모델이 데이터를 아주 잘 설명하고 있다고 보긴 어렵지만, 우리가 학습시키고자 하는 방향성은 어느정도 학습 된 것 같다. (공의 위치에 따른 수비선수들의 위치를 학습 시키다보니 운동장 위의 상황에 따른 데이터의 분산이 존재한다. 예를 들어서 역습상황시의 수비위치와 지공상황의 수비위치는 분명 다르기에 학습 데이터의 target 값에 분산이 존재하고 모델링의 설명력 자체의 한계가 존재할 수 밖에 없다.)
 
-<p align=center>
-<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/7babe5e7-6f70-4982-a26d-7cb17249a8e3" width="500", height="250">
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/experiment_results.png?raw=true" width = 500 height = 300>
 </p>
 
 #### 예측값 plot

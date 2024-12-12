@@ -22,13 +22,13 @@ tags:
 # EPTS
 과거에는 선수들의 통계지표만 활용하여 플레이를 분석했다면, 최근에는 EPTS(Electronic Performance and Tracking Systems) 기술을 통해서 실시간으로 선수들의 좌표 데이터를 생성해낸다. GPS 기기 또는 Computer Vision 기술을 활용해서 이러한 데이터들을 뽑아내는데, 이러한 좌표 데이터가 매우 정교해 지면서 이를 기반으로 선수들의 플레이를 모델링하는 것이 가능해졌다. 너무나 감사하게도 Metrica_sports 에서 3경기 분량의 ETPS 예시 경기 데이터를 무료로 공개하고 있고, kloppy package 에서 축구 데이터 분석을 위한 다양한 전처리 함수 및 시각화 함수를 제공하고 있어서 데이터를 이것 저것 다뤄볼 수 있다.
 
-[metrica-sports](https://github.com/metrica-sports) <br>
-[kloppy](https://github.com/PySport/kloppy)
-
 # Voronoi Diagram
 Voronoi Diagram 은 평면을 특정 점까지의 거리가 가장 가까운 점의 집합으로 분할한 그림이다. 들로네 삼각분할과 쌍대관계이며, 머신러닝의 관점에서 1-nn 모델의 decision boundary 라고 볼 수 도 있겠다. 이는 축구경기에서 선수들의 공간점유를 표현하는 방법으로도 활용되었다. 선수의 현재 속도, 신체 능력과 별개로 현재 위치만 고려했을 때, 특정 공간과 가장 가까운 선수가 공간을 차지할 것이라는 단순한 가정을 한다면 Voronoi Diagram 으로 공간 점유를 표현할 수 있다.
 
-![out](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/bbb1652d-e483-4bf1-b143-ed0f4e779713)
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/Voronoi.png?raw=true" width = 500 height = 300>
+</p>
+
 > Sample match 1의 Voronoi Diagram 시각화 예시
 
 선수들이 점유하는 공간을 단순하고 직관적으로 표현하기에는 좋지만, 선수들의 움직임이나 능력치가 전혀 반영되어 있지 않기 때문에 선수들의 움직임과 실제 선수가 점유하고 있는 공간을 표현하기 위해서는 좀 더 디테일한 모형들이 필요하다.
@@ -37,7 +37,10 @@ Voronoi Diagram 은 평면을 특정 점까지의 거리가 가장 가까운 점
 말그대로 "경기장 점유" 모형이다. 특정 공간이 어떤 선수 또는 팀으로부터 점유되고 있는지 확률적으로 나타내는 모형이다. Voronoi Diagram 의 개념을 확장해서 선수들의 속도, 공과의 거리, 공을 컨트롤 할 확률 등 여러가지를 고려한 다양한 모형들이 제시되고있다. 이번에 구현해볼 Pitch control 모형은 Javier Fernandez 의 Wide Open Spaces.. 논문에 나오는 모형이다. (논문을 읽고 나서 찾아보니 바르셀로나 FC 에서 스포츠 분석팀 리더까지 맡았던 대단한 분이었다...)
 해당 모형은 선수의 속도, 공까지의 거리까지 고려한 Pitch control 모형이다.
 
-![pitchcontrol](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/75bcd197-3066-4851-8078-1312e48cc2e9)
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/Pitchcontrol.png?raw=true" width = 500 height = 300>
+</p>
+
 > Wide open space : pitch control model
 
 # Wide Open space / Pitch control
@@ -57,9 +60,10 @@ $$
 
 $$f_i(p, t) = \mathbf{pdf} \space of \space \mathbf{X}$$
 
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/Influence function.png?raw=true" width = 500 height = 300>
+</p>
 
-
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/360af4a4-3f7d-4c2c-9d1b-b8e4309aeba6)
 > L) 단순 bivariate normal distribution 기반의  $$f_i(p,t)$$, <br>
 R) 플레이어의 속도와 방향이 고려된 Wide open space 의 $$f_i(p,t)$$   
 
@@ -97,8 +101,8 @@ $$\Sigma_i(t) = R(\theta,t)S_i(t)S_i(t)R(\theta_i(t), t)^{-1}$$
 
 여기서, $$Srat_i(s)$$ 는 일반적인 선수들의 최고 속도를 13m/s 로 고정하고 현재 속도 $$s$$ 와 최고속력의 비율을 나타낸다. 이 값이 커지면 커질 수록 속도 방향으로 길고 가는 형태의 gaussian 분포가 나타나게 된다. $$R_i(t)$$ 는 선수-공과의 거리와 영향력 범위를 나타내는 값인데 본 연구에서는 도메인 지식을 활용해서 [4,10] 의 값을 가지는 함수로 지정하였다. 공과의 거리가 가까울수록 선수가 점유하는 공간은 좁아진다는 개념을 기초로 하고 있다. 공이 가까이 있는 경우에는 볼을 컨트롤 한다거나, 볼을 가진 선수들을 마크하는 상황이 많기 때문에 오히려 점유하는 공간이 제한된다. 거리-영향력 범위 함수는 아래 그래프와 같은 값을 가진다.
 
-<p align=center>
-<img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/6fe3c80a-8140-4e66-9669-2f818d8310a7" width="300" height="200"/>
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/R_function.png?raw=true" width = 500 height = 300>
 </p>
 
 ## 최종 Pitch Control 모형
@@ -110,8 +114,9 @@ $$PC(p,t) = \sigma(\Sigma_i I(p,t)-\Sigma_j I(p,t))$$
 
 여기서 $$\sigma$$ 는 logistic function 으로 logistic regression, neural network 의 activation function 에서 자주 활용되는 함수이다. 여기서는  홈팀의 Influence 합과 어웨이 팀의 Influence 합을 뺀 값을  0-1사이의 값으로 변환시켜주는 역할을 한다. 이 PC의 값을 활용하여서 0.5 이상/미만으로 공간을 구분한다면 특정 공간이 어떤 팀에 의해서 점유되고 있는지를 표현하는 classifier 로 이해할 수도 있을 것이다. 최종적으로 구성된 특정 시점의 PC를 시각화하면 다음과 같다.
 
-
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/31e78d4f-32d2-40be-bfad-57a77fc4db37)
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/Pitchcontrol.png?raw=true" width = 500 height = 300>
+</p>
 
 이 모형을 통해서 매 시점마다의 선수들이 점유하는 공간을 표현할 수 있고, 이 논문에서는 이를 활용해서 선수들의 공간 창출 움직임을 수치화 하는 방법까지 제시한다. 그 내용은 다음 글에서 계속해서 설명하려고 한다. (쓰다보니까 글이 너무 길어짐.)
 
@@ -279,9 +284,9 @@ ax.scatter(ball_x, ball_y, color='black')
 </div>
 </details>
 
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/086475a8-01db-43ac-abb9-37b898b26e3b)
-
-
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/Wide_open_space/pitchcontrol.gif?raw=true" width = 500 height = 300>
+</p>
 
 # Wrap up 
  역시 바르셀로나가 축구를 괜히 잘하는 게 아니구나... 이정도로 디테일한 모델링과 분석을 하니까 잘할 수 밖에. 생각보다 너무 시간이 많이 들었다. 이렇게 진지모드로 글을 쓰려고 했던 것은 아닌데 말이지. 정리하다 보면 점점 요령이 쌓이겠지.

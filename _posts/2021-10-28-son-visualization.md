@@ -15,7 +15,12 @@ tags:
 손흥민 선수는 뛰어난 프리미어리그 선수들 중에서도 단연 빛나는 선수가 되었다.
 최근 몇 년간 손흥민 선수는 이미 대한민국의 **국뽕**이 담기엔 너무 큰 선수가 된 듯 하다. <br>
 (프리미어리그 PFA Best 11에다, 푸스카스 수상)<br>
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/93f92702-e366-4179-8d44-930342994a8a)
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/sony_visualization/puskas son.png?raw=true" width = 500 height = 300>
+</p>
+
+
 <br>
 
 21-22 시즌 현재, 토트넘이 흔들리며 팀과 함께 어려운 시즌을 보내고 있지만, 
@@ -39,12 +44,12 @@ tags:
 
 공격포인트는 그 선수의 **생산력**을 나타내는 지표이고, 
 평점은 공격포인트 만으로 표현되지 않는 **경기 영향력**이 포함된 지표라고 생각하였다.<br>
-`
-물론 분명히 공격포인트와 평점의 관계는 독립이 아니며, 
+물론 분명히 공격포인트와 평점의 관계는 독립적이지 않고,
 공격포인트를 기록한 경기에서 그 선수의 평점이 높게 책정되었을 것이다.
 하지만, 평점은 공격포인트로 표현되지 않은 플레이도 분명 반영된 값으로 
-축구 전문가들이 제시하는 고오급 정보로서 활용하지 않을 수 없었다.
-`
+축구 전문가들이 제시하는 **고오급 정보**로서 활용하지 않을 수 없었다.
+
+
 # 공격포인트 & 평점 plot
 
 > - 프리미어리그 선수 데이터 : whoscored.com 에서 crawling
@@ -52,7 +57,10 @@ tags:
 > - [github/sonny_stats_visualziation](https://github.com/jmlee8939/Sonny_stats_visualization) 참고
 
 리버풀이 30년만에 리그 우승을 하였던 19-20 시즌의 공격포인트 & 평점 plot은 다음과 같다.
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/147ab6cf-e959-47de-9054-447fb84abf6e)
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/sony_visualization/son_19_20_PL.png?raw=true" width = 500 height = 300>
+</p>
 
 눈에 띄는 건 역시 **Kevin De Bruyne** 선수이다. <br> 
 공격포인트와 평점에서 독보적인 시즌을 보냈고, 실제 올해의 선수상 수상자 이기도 하다.<br>
@@ -64,7 +72,10 @@ tags:
 저번 시즌(2020-2021 season) **손흥민**은 **케인**과 함께 엄청난 시즌을 보냈다.
 아쉽게도 팀은 유로파 컨퍼런스 진출에 그쳤지만, 두 선수는 커리어 하이 시즌을 보냈다.
 손흥민은 17골 10도움, 케인은 23골 14도움(득점왕 + 도움왕)으로 나란히 리그 베스트 11에 들었다.
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/5f93e12c-0dd6-40d7-846f-7fb59342a105)
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/sony_visualization/son_2021_PL_no_line.png?raw=true" width = 500 height = 300>
+</p>
 
 그림에도 나타나듯 손흥민과 케인은 다른 프리미어리그 공격수들에 비해 독보적인 시즌을 보낸 것을 확인할 수 있다.<br>
 (2021 시즌 한정 손흥민 > 마네 = 스털링)
@@ -75,7 +86,9 @@ tags:
 plot 에서 보면 공격수(AM, FW)들의 공격포인트와 평점은 마치 선형관계처럼 보인다.
 평점(선수들의 퍼포먼스)를 독립변수, 공격포인트를 종속변수로 하여 `단순 선형회귀선`을 그어보았다.
 
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/d7bf388d-9274-4027-9a81-31e0cc68f414)
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/sony_visualization/son_2021_PL.png?raw=true" width = 500 height = 400>
+</p>
 
 선형 회귀선은 PL 선수들의 평점과 공격포인트의 상관관계를 표현하고, 
 이 선형 회귀선 위쪽의 선수들은 퍼포먼스 대비 공격포인트 생산성이 좋은 선수들,
@@ -96,8 +109,10 @@ plot 에서 보면 공격수(AM, FW)들의 공격포인트와 평점은 마치 �
 데이터 차원 축소법 중 가장 널리 활용되는 PCA(Principal Component Analysis)를 활용하여,
 1차원에 선수들의 퍼포먼스를 맵핑하고 순위를 정해보았다.<br>
 PCA 를 통해 차원 축소를 진행하면 다음 그림과 같다.
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/41c38b14-fbf0-4919-a528-7743c61faa48)
 
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/sony_visualization/PCA_forward.png?raw=true" width = 500 height = 200>
+</p>
 
 PCA 결과는 다음과 같다.
 
@@ -128,7 +143,9 @@ PL 공격수의 ranking top 5는
 손흥민은 15-16 시즌 독일 분데스리가 레버쿠젠에서 토트넘으로 이적했다.
 그 이후 손흥민의 seasonal ranking 이 어떻게 변화했는지 확인하기 위해서 bump chart 를 그려보았다.
 
-![image](https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/1984fad9-24b3-4ce2-a6a4-95a8973adebb)
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/sony_visualization/Forward_player_rank.png?raw=true" width = 500 height = 400>
+</p>
 
 그래프를 보면, 손흥민은 데뷔 시즌을 제외하고는 항상 리그 탑급 퍼포먼스를 보여왔다.
 직전 시즌에는 심지어 한 단계 업그레이드 해서 리그 최고 수준의 공격수로 거듭났다.
