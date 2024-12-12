@@ -1,5 +1,5 @@
 ---
-title: Football
+title: 축구 데이터 분석
 layout: category
 permalink: /categories/Football/
 author_profile: true

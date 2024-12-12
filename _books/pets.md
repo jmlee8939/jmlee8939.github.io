@@ -1,9 +1,8 @@
 ---
-title: Pets
+title: pets
 layout: collection
-permalink: /books/
 categories: "Books"
-permalink: "/Books/test/"
+permalink: /Books/test/
 ---
 
 Sample document listing for the collection `_pets`.
