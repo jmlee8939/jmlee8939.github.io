@@ -115,7 +115,7 @@ analytics:
 author:
   name             : "jaemini_man"
   avatar           : "/assets/images/profile.jpg" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "Love soccer (Liverpool FC) & pizza. <br> Study datascience <br> Read books"
+  bio              : "Love soccer (Liverpool FC) & pizza <br> Study datascience <br> Read books"
   location         : "South Korea"
   email            :
   links:
