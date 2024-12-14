@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_pages/about.md",
+                "file": "_posts/2024-02-08-나는 메트로폴리탄 미술관의 경비원입니다..md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "about"
+              "title": "2024-02-08-나는 메트로폴리탄 미술관의 경비원입니다."
             }
           }
         ]
@@ -160,6 +160,7 @@
   },
   "active": "7099a557c4e9c726",
   "lastOpenFiles": [
+    "_pages/about.md",
     "_posts/2024-02-08-나는 메트로폴리탄 미술관의 경비원입니다..md",
     "_posts/2021-10-27-whoscored-crawling.md",
     "_posts/2023-03-13-서울교통공사.md",
