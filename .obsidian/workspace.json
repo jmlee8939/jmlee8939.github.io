@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_pages/about.md",
+                "file": "_posts/2023-06-11-멋진 신세계.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "about"
+              "title": "2023-06-11-멋진 신세계"
             }
           }
         ]
@@ -160,9 +160,9 @@
   },
   "active": "981878804d06c73c",
   "lastOpenFiles": [
+    "_pages/about.md",
     "assets/images/profile2.png",
     "_pages/books.md",
-    "_pages/about.md",
     "assets/images/profile2.JPG",
     "assets/images/IMG_5003.JPG",
     "_posts/2023-06-11-멋진 신세계.md",
@@ -182,7 +182,6 @@
     "docs/Notes",
     "_posts/2023-07-25-Wide_open_space.md",
     "_posts/2024-05-04-K_league_실시간_승부예측_모형.md",
-    "_site/assets/images/books/all_the_beauty_in_the_world/metropolitan_museum.png",
     "_site/assets/images/books/all_the_beauty_in_the_world",
     "_site/assets/images/books",
     "assets/images/books/all_the_beauty_in_the_world",
