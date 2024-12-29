@@ -12,6 +12,10 @@ title: "About"
 
 # Author
 
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/profile2.jpg?raw=true" width = 200 height = 250>
+</p>
+
 ### Name
 이재민 / Lee Jaemin
 
