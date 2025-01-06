@@ -12,7 +12,7 @@ title: "About"
 
 # Author
 
-<p align="center">
+<p align="left">
 <img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/profile2.png?raw=true" width = 200 height = 250>
 </p>
 
