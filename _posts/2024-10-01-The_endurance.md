@@ -1,19 +1,34 @@
+---
+title: "인듀어런스 섀클턴의 위대한 실패"
+excerpt: "성공보다 위대한 실패는 분명히 있다. 그들은 다만 방향을 바꾸어 나아갔다."
+categories: "Books"
+permalink: "/Books/the-endurance/"
+header: 
+    teaser: "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true"
+tags:
+  - 인내
+  - 도전
+  - 리더쉽
+---
 
-**성공보다 위대한 실패가 있다. 그들은 다만 방향을 바꾸어 앞으로 나아갔다.**
+**성공보다 위대한 실패는 분명히 있다. 그들은 다만 방향을 바꾸어 나아갔다.**
 
-아버지의 책 추천은 꽤 오랜만이다. 다른 건 몰라도 아버지의 음악과 책 추천은 실패한 적이 없었다. 추천해주신 책을 읽으면 꽤 깊이 아버지를 이해할 수 있게 된다. 아버지의 인생 항해 속 반환점을 돌아 뱃머리를 돌리고 있는 단계에 접어드는 지금, 본인의 항해를 어떤 태도로 바라보고 싶은가를 이 책을 통해 공감 할 수 있었다.  
+아버지의 책 추천은 꽤 오랜만이다. 다른 건 몰라도 아버지의 음악과 책 추천은 거의 실패한 적이 없었다. 추천해주신 책을 읽고나면 잠깐이지만 꽤 깊이 아버지의 이해할 수 있게 된다. 아버지의 인생 항해 속 반환점을 돌아 뱃머리를 돌리고 있는 단계에 접어드는 지금, 본인의 항해를 어떤 태도로 바라보고 싶은가를 이 책을 통해 들여다 볼 수 있었다.  
 
 <p align="center">
-<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/all_the_beauty_in_the_world/metropolitan_museum.png?raw=true" width = 500 height = 300>
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true" width = 500 height = 300>
 </p>
-
-![[스크린샷 2025-02-06 오후 7.41.08.png]]
 ### 성공보다 위대한 실패
 
 인듀어런스 호의 리더인 어니스트 새클턴 경은 영국 사람으로, 인듀어런스 호 탐험 전에도 2번이나 남극 탐험 경험이 있는 베테랑 탐험가였다. 그는 첫 남극 탐험으로 유명 탐험가인 스콧과 함께하기도 했다. 아쉽게도 그의 3번째 남극 탐험 전에 이미 남극점이 아문센에 의해 정복되었지만 그는 남극점을 통과하여 남극 대륙 횡단이라는 더 큰 목표를 갖고 인듀어런스 호 탐험을 계획했다. 젊고 건강한 선원을 모으고 배를 구해 야심차게 탐험을 나가지만 그들의 여정은 부빙을 만나 결국 남극대륙에 상륙하지도 못한 채 끝나버렸다.
 
 하지만, 그의 진짜 도전은 그때부터였다. 남극해 한가운데 끝없는 부빙과 강한 해류 속에서 본인과 동료들을 살려서 복귀시키는 도전. 남극의 빙하에게는 선원들에게 베풀 자비 따위는 없다. 때로는 예고없이 갈라져 사람들을 물에 빠뜨리고, 때로는 무섭게 치고 들어와 배를 산산조각 내기도 하였다. 빙하위 겨울 온도는 영하 30도 이하로 떨어지고, 식량도 풍부하지 않다. 이 극한의 상황에서 그는 1년 7개월을 버티고 돌파해 결국 모든 선원들을 데리고 탈출해낸다. 인듀어런스 호의 도전은 남극 대륙에 닿지도 못하고 끝이 났지만, 그 어떤 탐험기보다 강렬한 이야기를 남겼다. 아주 먼 시점에서 바라보면 성공과 실패의 경계가 희미해지고 오로지 이야기만 남게 된다. 위대하다는 건 긴 여운을 남기는 것이 아닐까. 당장 눈 앞의 손에 잡히는 결과물을 얻기 위해서 자주 발버둥치는 나로서는 진정 가치있게 오래 기억에 남는 것은 과정과 이야기라는 사실을 잊지 말아야겠다.   
 ### 스콧과 섀클턴
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/로버트_스콧.png?raw=true", align="center" width = 300 height = 400>
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/어니스트_섀클턴.png?raw=true", align="center" width = 300 height = 400>
+</p>
 
 **"To die like a English gentleman" - 로버트 스콧** 
 
@@ -26,6 +41,10 @@
 ### 팀의 목표는 단순할 수록 좋다
 
 그들은 어떻게 절망적인 환경속에서 좌절하지 않고 앞으로 나아갈 수 있었을까. 강력한 팀을 구성하고 성공적으로 이끌기 위해서는 목표가 단순해야한다. 인듀어런스 호의 남극횡단이 부빙에 갖혀 좌절되었을때, 섀클턴은 아주 명확하게 단순한 목표를 세웠다. '모든 대원들의 무사 귀환'. 목표가 단순할 수록 방식의 유연함이 생기게 되고, 구성원들의 동기부여에도 효과적이다. 이는 현대사회에서 다른 사람들과 협업을 해야 할 때도 동일하게 활용 될 수 있을 것 같다. 같은 일을 함께하더라도 모두가 다른 동기, 다른 생각을 하고 있을 것이다. 단순한 목표는 팀이 나아가야 할 나침반의 지침이 동일한 방향을 가리키도록 고정시켜주고, 각자의 동기로 이를 지키게 만들어 주게 된다.   
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/endurance_route.png?raw=true", align="center" width = 400 height = 400>
+</p>
 
 ### 좌절은 없다
 
