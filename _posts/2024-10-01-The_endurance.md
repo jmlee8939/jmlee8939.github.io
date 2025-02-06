@@ -26,8 +26,8 @@ tags:
 ### 스콧과 섀클턴
 
 <p align="center">
-<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/로버트_스콧.png?raw=true", align="center" width = 300 height = 400>
-<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/어니스트_섀클턴.png?raw=true", align="center" width = 300 height = 400>
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/로버트_스콧.png?raw=true" align="center" width = 300 height = 400>
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/어니스트_섀클턴.png?raw=true" align="center" width = 300 height = 400>
 </p>
 
 **"To die like a English gentleman" - 로버트 스콧** 
@@ -43,7 +43,7 @@ tags:
 그들은 어떻게 절망적인 환경속에서 좌절하지 않고 앞으로 나아갈 수 있었을까. 강력한 팀을 구성하고 성공적으로 이끌기 위해서는 목표가 단순해야한다. 인듀어런스 호의 남극횡단이 부빙에 갖혀 좌절되었을때, 섀클턴은 아주 명확하게 단순한 목표를 세웠다. '모든 대원들의 무사 귀환'. 목표가 단순할 수록 방식의 유연함이 생기게 되고, 구성원들의 동기부여에도 효과적이다. 이는 현대사회에서 다른 사람들과 협업을 해야 할 때도 동일하게 활용 될 수 있을 것 같다. 같은 일을 함께하더라도 모두가 다른 동기, 다른 생각을 하고 있을 것이다. 단순한 목표는 팀이 나아가야 할 나침반의 지침이 동일한 방향을 가리키도록 고정시켜주고, 각자의 동기로 이를 지키게 만들어 주게 된다.   
 
 <p align="center">
-<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/endurance_route.png?raw=true", align="center" width = 400 height = 400>
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/endurance_route.png?raw=true" align="center" width = 400 height = 400>
 </p>
 
 ### 좌절은 없다
