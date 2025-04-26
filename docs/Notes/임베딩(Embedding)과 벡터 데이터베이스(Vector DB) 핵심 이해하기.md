@@ -1,0 +1,154 @@
+## Intro
+
+**"LLM 이 모든 시스템에 침투하고 있다."**
+
+LLM 이 사내 시스템에도 본격적으로 침투하기 시작했다. 보안과 할루시네이션 없는 정확한 정보가 중요한 도메인에서 LLM + RAG 의 활용 가능성은 그 어떤 AI 기술보다 커 보인다. AI Application 사용자 또 개발자로서 LLM, RAG 에 대한 기본적인 개념은 짚고 가야 겠다는 생각이 들어, (Embedding) 개념부터 시작해, Word2Vec 같은 고전적인 임베딩 모델, 그리고 최근 세상을 뒤덮은 Transformer 기반 임베딩, 그리고 이를 저장하고 검색하기 위한 벡터 데이터베이스(Vector DB)까지 정리해보았다. 
+
+## 📍 임베딩(Embedding)이란?
+
+임베딩은 **복잡한 데이터(텍스트, 이미지, 오디오 등)** 를 기계 학습 알고리즘이 쉽게 다룰 수 있도록 **연속적인 벡터 공간으로**로 변환하는 기술이다. 
+
+- 데이터의 차원 축소
+- 데이터의 차원 변경 (텍스트 -> 벡터 or )
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true" width = 700 height = 300>
+</p>
+
+![[image1.png]]
+
+**PCA**, **t-SNE** 등이 차원 축소와 의미 보존을 위한 가장 널리 알려진 방법들.
+
+## 📚 Word Embedding: 단어를 벡터로 표현하기
+
+**Word Embedding**은 단어를 임의 차원의 벡터 공간 위에 점으로 표현하는 방법이다.
+
+| 희소 표현 (Sparse Vector)              | 밀집 표현 (Dense Vector)                       |
+| :--------------------------------- | :----------------------------------------- |
+| 단어 개수만큼 차원이 필요                     | 상대적으로 적은 차원 필요 (차원 크기 조절 가능)               |
+| 단어 간 연관성 반영 불가                     | 단어 간 연관성 반영 가능                             |
+| Ex) TF-IDF                         | Ex) Word2Vec, GloVe, BERT                  |
+| Ex) 강아지 = [0, 0, 0, 0, 0, 1, …, 0] | Ex) 강아지 = [0.6, 0.8, 0.1, -0,2, -0.7, 0.2] |
+
+
+## ✨ Word2Vec: 임베딩의 고전
+
+**"큰 일은 Google 이 다 한다."**
+
+10년도 더 전에 나왔던 논문이지만, Text 임베딩의 고전 of 고전 Word2Vec 모델이다. 아주 심플한 학습방법으로 단어를 하나의 vector 로 맵핑하는 단순하면서 강력한 방법이다. 핵심은 'Simple' 한 모델에 'Reasonable' 한 학습방법이다. 2013년 **Google**의 **Tomas Mikolov**이 발표한 Word2Vec은 다음 두 가지 학습 방식으로 단어 벡터를 생성하였다.
+
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true" width = 600 height = 300>
+</p>
+
+![[image2.png]]
+
+- **CBOW (Continuous Bag of Words)**  
+  주변 단어들을 보고 중심 단어를 예측
+- **Skip-Gram**  
+  중심 단어를 보고 주변 단어들을 예측 (CBOW보다 더 나은 성능)
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true" width = 600 height = 300>
+</p>
+
+
+![[image3.png]]
+
+**핵심 아이디어**는 "**비슷한 문맥에서 등장하는 단어들은 비슷한 의미를 가진다**"는 **분포 가설**이다.
+
+## 🧠 Transformer 기반 Text 임베딩 모델
+
+**"Transformer 의 시대"**
+
+2017 년 Transformer 구조가 등장한 이후에 단순히 단어 embedding 에서 나아가 문맥을 반영한 문장, 글 embedding 모형들이 등장했다. 현재는  **Transformer 구조**를 기반으로 한 임베딩 모델이 대세가 된지 오래다. 수 많은 모형들이 등장했지만, 가장 대표적인 모델들은 결국 다음 3개이다.
+
+- **BERT** (2019, Google)  
+  - 텍스트 분류, Q&A 등에서 강력한 성능
+  - Transformer 인코더 구조 활용
+- **S-BERT**  
+  - 문장 임베딩 최적화 → 문장 유사도 계산, 정보 검색 특화
+  - Siamese 구조
+- **GPT**  
+  - 텍스트 요약, 번역, 생성 특화
+  - Transformer 디코더 구조 활용
+
+
+## 🗂️ Vector Database (벡터 데이터베이스)
+
+**"똑같은 거 찾아줘 X. 비슷한 걸 찾아줘 O."**
+
+**Vector DB**는 비정형 데이터(text, image 등)를 수치 벡터로 변환하여 저장하고, 이를 효율적으로 검색할 수 있게 설계된 데이터베이스이다.  
+
+실제 현업에서 사용중인 대부분의 DB 는 RDBMS 2차원 테이블 형태이다. 데이터 검색을 할때 Row by Row 로 같거나, 포함되거나, 대소 비교를 통해서 쿼리 결과를 산출해주는 데 반해, Vector DB 는 저장되어 있는 vector 형태의 데이터에서 의미 기반 검색 기능을 제공한다. LLM 활용도가 커짐에 따라서 많은 DB solution 들이 Vector DB 를 서비스하기 시작했고, 점점 그 활용폭이 커질 것 같다.
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true" width = 600 height = 300>
+</p>
+
+
+![[image4.png]]
+
+
+## ⏭️ Vector DB Indexing
+
+DB 의 핵심은 결국 많은 데이터 속에서 얼마나 정보를 빠르게 찾을 수 있는가. 결국 indexing 이다. Vector DB 도 아래와 같은 종류에 따라 여러 indexin 방법을 활용하고 있다. 
+
+- **Flat Index**
+	- 가장 기본적인 방법, 쿼리 벡터를 모든 데이터 세트와 비교하는 방법. 
+- **LSH (Locality Sensitive Hashing)**
+	- Hashing function 을 활용해서 동일 hash bucket 에서 서칭 하는 방법.
+	- 비슷한 값을 가진 vector 는 동일 hashing function 을 거쳐서도 같은 buckets 에 들어갈 것.
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true" width = 600 height = 300>
+</p>
+
+
+![[image6.png]]
+- **IVF (Inverted File Index)**
+	- 역 인덱스 활용 (클러스터링 idx 부여) 하여 특정 공간 내에서 찾는 방법.
+	- K-means
+	- Voronoi Diagram
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true" width = 600 height = 300>
+</p>
+
+![[image5.png]]
+- **HNSW (Hierarchical Navigable Small World)**
+	- 그래프 기반의 근사 최근접 이웃(ANN) 검색 알고리즘.
+	- 해상도 낮은 그래프 부터 높은 그래프를 구성해 놓고 위 층 부터 가장 가까운 point 를 찾아가는 방법.
+	- 가까운 국가 > 도 > 시 > 구 > 동 순으로 찾아가는 방식.
+	- Skip search 알고리즘
+	- 대부분의 Vector DB 솔루션에서 활용 중.
+
+<p align="center">
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/the_endurance/broken_ship.png?raw=true" width = 600 height = 400>
+</p>
+
+
+![[image7.png]]
+
+# Wrap Up
+
+**임베딩**은 복잡한 데이터를 이해하기 쉽게 만들고, **벡터 데이터베이스**는 이를 효과적으로 다루기 위한 핵심 인프라입니다. 앞으로 LLM, 검색, 추천 분야를 공부하거나 일하게 될 분이라면, 이 두 가지 개념은 꼭 이해하고 넘어가야 할 기본기 인 것 같다. 자원 부족과 시스템 안정성 때문에 LLM 을 제대로 활용하기 어려운 환경에서도Embedding + Vector DB + Rule base 시스템 조합 만으로도 꽤 괜찮은 검색 솔루션을 만들어 낼 수 있을 것 같다. 😄
+
+# Reference
+
+#### Web
+딥 러닝을 이용한 자연어 처리 입문.
+https://wikidocs.net/book/2155
+오라클 DB vector index 설명자료.
+https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/
+#### Paper
+
+|            | 링크                                                                                            |
+| ----------- | --------------------------------------------------------------------------------------------- |
+| Word2Vec    | https://arxiv.org/abs/1301.3781                                                               |
+| Transformer | https://arxiv.org/abs/1706.03762                                                              |
+| BERT        | https://arxiv.org/abs/1706.03762                                                              |
+| GPT         | https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf |
+| S-BERT      | https://arxiv.org/abs/1908.10084                                                              |
+
