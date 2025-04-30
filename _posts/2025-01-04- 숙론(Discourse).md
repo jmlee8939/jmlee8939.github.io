@@ -4,7 +4,7 @@ excerpt: 누가 옳은가가 아니라 무엇이 옳은가를 찾으려는 것�
 categories: Books
 permalink: /Books/Discourse/
 header:
-  teaser: https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/discourse.Discourse.png?raw=true
+  teaser: https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/discourse/Discourse.png?raw=true
 tags: []
 ---
 
@@ -15,7 +15,7 @@ tags: []
 >"누가 옳은가가 아니라 무엇이 옳은가를 찾으려는 것이다."
 
 <p align="center">
-<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/discourse.Discourse.png?raw=true" width = 600 height = 300>
+<img src= "https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/discourse/Discourse.png?raw=true" width = 600 height = 300>
 </p>
 
 ## 책임감있는 지식인
