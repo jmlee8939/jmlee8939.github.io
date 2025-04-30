@@ -5,7 +5,9 @@ categories: Books
 permalink: /Books/Discourse/
 header:
   teaser: https://github.com/jmlee8939/jmlee8939.github.io/blob/master/assets/images/books/discourse/Discourse.png?raw=true
-tags: []
+tags: 
+  - 사회
+  - 철학
 ---
 
 - 저자 : 최재천
