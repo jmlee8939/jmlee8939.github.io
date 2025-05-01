@@ -8,6 +8,19 @@ search: false
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
 
+
+body {
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  }
+
+/*
+@font-face {
+    font-family: 'KyoboHandwriting2023wsa';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404-2@1.0/KyoboHandwriting2023wsa.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
 @font-face {
     font-family: 'KyoboHandwriting2023wsa';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404-2@1.0/KyoboHandwriting2023wsa.woff2') format('woff2');
@@ -28,3 +41,4 @@ search: false
     font-weight: normal;
     font-style: normal;
 }
+*/
